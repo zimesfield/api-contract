@@ -1,0 +1,198 @@
+openapi: "3.0.0"
+info:
+  title: Vendor Management Contract
+  version: 2.0.0
+
+tags:
+  - name: VendorResource
+    description: Vendor information
+  - name: VendorRegistrationResource
+    description: Register new vendor
+paths:
+  /register/vendor:
+    post:
+      operationId: register
+      tags:
+        - VendorRegistrationResource
+      description: Register to have access as a vendor
+      requestBody:
+        description: Input your details here
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegistrationRequest"
+
+      responses:
+        "200":
+          description: Registration was successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegistrationResponse"
+
+        "403":
+          description: You do not have access to this resource
+        "404":
+          description: Registration failed!
+        "405":
+          description: bad request
+
+  /Vendors:
+    post:
+      operationId: addVendor
+      tags:
+        - VendorResource
+      description: Register to have access as a vendor
+      requestBody:
+        description: Input your details here
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VendorRequest"
+
+      responses:
+        "200":
+          description: Registration was successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VendorResponse"
+
+        "403":
+          description: You do not have access to this resource
+        "405":
+          description: Bad request
+    get:
+      operationId: getAllVendors
+      tags:
+        - UserResource
+      description: Return the list of registered vendors
+      responses:
+        "200":
+          description: returns the list of vendors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/VendorResponse"
+        "400":
+          description:  Empty request
+        "405":
+          description: Not allowed to make this request
+
+  /vendor/{uuid}:
+    get:
+      operationId: getVendorByUuid
+      tags:
+        - VendorResource
+      description: Returns a single registered vendor information
+      parameters:
+        - name: uuid
+          in: path
+          description: the Uuid of the vendor to fetch
+          schema:
+            type: integer
+            format: int64
+          required: true
+      responses:
+        "200":
+          description: returns the list of vendors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/VendorResponse"
+        "400":
+          description: Request is empty
+        "405":
+          description: Not allowed to make this request
+
+
+components:
+  schemas:
+    RegistrationRequest:
+      type: object
+      description: Registration Details
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          example: "james.doe@test.com"
+        password:
+          type: string
+          example: "@dkcyker123"
+
+    RegistrationResponse:
+      type: object
+      description: Registration Details
+      properties:
+        activationUrl:
+          type: string
+          example: 'http://localhost:8082?activationCode=1234'
+        activationCode:
+          type: string
+          example: "1234567"
+
+    VendorRequest:
+      type: object
+      description: Details to create a new vendor
+      required:
+        - firstName
+        - lastName
+        - phone
+        - email
+        - username
+        - password
+      properties:
+        firstName:
+          type: string
+          example: James
+        lastName:
+          type: string
+          example: Doe
+        dob:
+          type: string
+          format: date-time
+          example: '2000-07-09T19:44:13.720Z'
+        phone:
+          type: string
+          example: '07032543523'
+        email:
+          type: string
+          example: "james.doe@test.com"
+        username:
+          type: string
+          example: "cyker"
+        password:
+          type: string
+          example: "@dkcyker123"
+
+    VendorResponse:
+      type: object
+      description: User detail response
+      properties:
+        id:
+          type: number
+        firstName:
+          type: string
+        lastName:
+          type: string
+        dob:
+          type: string
+          format: date-time
+        phone:
+          type: string
+        email:
+          type: string
+        username:
+          type: string
+          example: "cyker"
+        password:
+          type: string
+          example: "@dkcyker123"
+
+
