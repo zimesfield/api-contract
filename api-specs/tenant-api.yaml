@@ -1,0 +1,163 @@
+openapi: 3.0.3
+info:
+  title: Tenant Registration API
+  version: 1.1.0
+  description: API for registering tenants, validating input, verifying token, and sending notifications in a multi-tenant system.
+
+servers:
+  - url: https://api.myapp.com/v1
+    description: Production Server
+
+paths:
+  /tenants/register:
+    post:
+      summary: Register a new tenant
+      tags:
+        - Tenant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantRegistration'
+      responses:
+        '201':
+          description: Tenant successfully registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantResponse'
+        '400':
+          description: Invalid input or tenant already exists
+
+  /tenants/validate:
+    post:
+      summary: Validate company information before registration
+      tags:
+        - Tenant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantValidationRequest'
+      responses:
+        '200':
+          description: Company information is valid
+        '422':
+          description: Validation failed
+
+  /tenants/verify-token:
+    post:
+      summary: Verify registration token sent via email
+      tags:
+        - Token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenVerificationRequest'
+      responses:
+        '200':
+          description: Token is valid
+        '400':
+          description: Invalid or expired token
+
+  /tenants/send-registration-email:
+    post:
+      summary: Send email notification to admin after registration
+      tags:
+        - Notification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailRequest'
+      responses:
+        '200':
+          description: Email sent successfully
+        '500':
+          description: Email service error
+
+components:
+  schemas:
+    TenantRegistration:
+      type: object
+      required:
+        - companyName
+        - adminEmail
+        - adminFullName
+        - phone
+        - address
+      properties:
+        companyName:
+          type: string
+          example: "Zimesfield Limited"
+        adminEmail:
+          type: string
+          format: email
+          example: "admin@zimes.com"
+        adminFullName:
+          type: string
+          example: "Jane John"
+        phone:
+          type: string
+          example: "+2348012345677"
+        address:
+          type: string
+          example: "123 Bale Street, Lagos, Nigeria"
+
+    TenantValidationRequest:
+      type: object
+      required:
+        - companyName
+        - adminEmail
+      properties:
+        companyName:
+          type: string
+          example: "Zimsefield Limited"
+        adminEmail:
+          type: string
+          example: "admin@zimes.com"
+
+    TokenVerificationRequest:
+      type: object
+      required:
+        - token
+      properties:
+        token:
+          type: string
+          example: "abc123-def456"
+
+    EmailRequest:
+      type: object
+      required:
+        - to
+        - subject
+        - message
+      properties:
+        to:
+          type: string
+          format: email
+          example: "admin@zimes.com"
+        subject:
+          type: string
+          example: "Welcome to the Tenant Portal"
+        message:
+          type: string
+          example: "Your registration was successful. Here’s how to log in..."
+
+    TenantResponse:
+      type: object
+      properties:
+        tenantId:
+          type: string
+          example: "tenant_001xyz"
+        companyName:
+          type: string
+          example: "Zimesfied limited"
+        status:
+          type: string
+          example: "Registration Successful"
