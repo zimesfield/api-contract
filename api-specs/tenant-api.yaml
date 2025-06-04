@@ -5,8 +5,12 @@ info:
   description: API for registering tenants, validating input, verifying token, and sending notifications in a multi-tenant system.
 
 servers:
-  - url: https://api.myapp.com/v1
-    description: Production Server
+  - url: http://localhost:8082/v1/api
+    description: Local Server
+  - url: https://tenant-dev.zimesfield.com/v1/api
+    description: Dev Server
+  - url: https://tenant.zimesfield.com/v1/api
+    description: Prod Server
 
 paths:
   /tenants/register:
@@ -19,7 +23,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TenantRegistration'
+              $ref: '#/components/schemas/TenantRegistrationRequest'
       responses:
         '201':
           description: Tenant successfully registered
@@ -28,19 +32,56 @@ paths:
               schema:
                 $ref: '#/components/schemas/TenantResponse'
         '400':
-          description: Invalid input or tenant already exists
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Tenant already exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
-  /tenants/validate:
-    post:
-      summary: Validate company information before registration
+  /tenants/{uuid}:
+    get:
+      summary: Retrieves tenant information
       tags:
         - Tenant
+      parameters:
+        - name: uuid
+          required: true
+          in: path
+          schema:
+            type: string
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TenantValidationRequest'
+              $ref: '#/components/schemas/Tenant'
+      responses:
+        '200':
+          description: Company information is valid
+        '404':
+          description: Tenant not found
+    put:
+      summary: Complete tenant registration
+      tags:
+        - Tenant
+      parameters:
+        - name: uuid
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantUpdateRequest'
       responses:
         '200':
           description: Company information is valid
@@ -64,50 +105,80 @@ paths:
         '400':
           description: Invalid or expired token
 
-  /tenants/send-registration-email:
-    post:
-      summary: Send email notification to admin after registration
-      tags:
-        - Notification
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/EmailRequest'
-      responses:
-        '200':
-          description: Email sent successfully
-        '500':
-          description: Email service error
 
 components:
   schemas:
-    TenantRegistration:
+    Address:
       type: object
       required:
-        - companyName
-        - adminEmail
-        - adminFullName
-        - phone
-        - address
+        - street
+        - area
+        - state
+        - country
       properties:
-        companyName:
+        houseNumber:
+          type: string
+          example: 123
+        street:
+          type: string
+          example: My street is here
+        area:
+          type: string
+          example: eti-osa
+        state:
+          type: string
+          example: Lagos
+        country:
+          type: string
+          example: Nigeria
+
+    TenantRegistrationRequest:
+      type: object
+      required: [tenantName, tenantEmail]
+      properties:
+        name:
           type: string
           example: "Zimesfield Limited"
-        adminEmail:
+        email:
           type: string
           format: email
-          example: "admin@zimes.com"
-        adminFullName:
+          example: "test@zimesfield.com"
+
+    TenantUpdateRequest:
+      type: object
+      required: [phone, address]
+      properties:
+        phoneNumber:
           type: string
-          example: "Jane John"
-        phone:
-          type: string
-          example: "+2348012345677"
+          example: "+2348012345678"
         address:
+          $ref: "#/components/schemas/Address"
+    Tenant:
+      type: object
+      properties:
+        tenantId:
           type: string
-          example: "123 Bale Street, Lagos, Nigeria"
+          example: "Zimesfield Limited"
+        name:
+          type: string
+          example: "Zimesfield Limited"
+        email:
+          type: string
+          format: email
+          example: "test@zimesfield.com"
+        phoneNumber:
+          type: string
+          example: "+2348012345678"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-06-04T14:00:00+01:00"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2025-06-04T14:00:00+01:00"
+        address:
+          $ref: "#/components/schemas/Address"
 
     TenantValidationRequest:
       type: object
@@ -124,8 +195,7 @@ components:
 
     TokenVerificationRequest:
       type: object
-      required:
-        - token
+      required: [token]
       properties:
         token:
           type: string
@@ -154,10 +224,23 @@ components:
       properties:
         tenantId:
           type: string
+          format: base64
           example: "tenant_001xyz"
         companyName:
           type: string
           example: "Zimesfied limited"
         status:
+          $ref: "#/components/schemas/TenantStatus"
+
+    TenantStatus:
+      type: object
+      enum: [ ACTIVE, INACTIVE, SUSPENDED ]
+      example: ACTIVE
+
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+        message:
           type: string
-          example: "Registration Successful"
