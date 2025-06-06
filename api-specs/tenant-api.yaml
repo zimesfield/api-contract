@@ -260,4 +260,3 @@ components:
           type: integer
         message:
           type: string
-          example: "Registration Successful"
