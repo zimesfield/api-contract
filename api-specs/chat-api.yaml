@@ -1,0 +1,506 @@
+openapi: 3.0.3
+info:
+  title: Chat API
+  version: 1.0.0
+  description: REST API for individual and group messaging using Spring Boot
+servers:
+  #  - url: '{protocol}://{environment}/services/chat/api'
+  - url: '{protocol}://{environment}/api'
+    description: Production server
+    variables:
+      protocol:
+        enum:
+          - http
+          - https
+        default: http
+      environment:
+        default: chat.raedaexpress.com    # Local server
+        enum:
+          - localhost:8081
+          - chat.raedaexpress.com
+tags:
+  - name: Chats
+    description: Chat Information
+  - name: Users
+    description: Users Information
+  - name: Groups
+    description: Groups Information
+paths:
+  /users:
+    get:
+      summary: Get all users
+      tags: [Users]
+      operationId: getAllChatUsers
+      parameters:
+        - name: pageable
+          in: query
+          description: the pagination information.
+          required: true
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      responses:
+        '200':
+          description: List of users
+          headers:
+            pageable:
+              $ref: '#/components/headers/PageResponse'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Create a new user
+      tags: [Users]
+      operationId: createChatUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /users/{id}:
+    get:
+      summary: Get all users
+      tags: [ Users ]
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          description: the id for a user.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /chats:
+    get:
+      summary: Get all chats
+      tags: [Chats]
+      operationId: getAllChats
+      parameters:
+        - name: pageable
+          in: query
+          description: the pagination information.
+          required: true
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      responses:
+        '200':
+          description: List of chats
+          headers:
+            pageable:
+              $ref: '#/components/headers/PageResponse'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Chat'
+    post:
+      summary: Create a new chat (individual or group)
+      tags: [Chats]
+      operationId: createNewChat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatCreateRequest'
+      responses:
+        '201':
+          description: Chat created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Chat'
+
+  /chats/{chatId}/messages:
+    get:
+      summary: Get messages for a chat
+      tags: [Messages]
+      operationId: getChatMessages
+      parameters:
+        - name: chatId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: pageable
+          in: query
+          description: the pagination information.
+          required: true
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      responses:
+        '200':
+          description: List of messages
+          headers:
+            pageable:
+              $ref: '#/components/headers/PageResponse'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+    post:
+      summary: Send message to a chat
+      tags: [Messages]
+      operationId: sendChatMessage
+      parameters:
+        - name: chatId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageRequest'
+      responses:
+        '201':
+          description: Message sent
+
+  /users/{userId}/chats:
+    get:
+      summary: Get chats for a user
+      tags: [Users]
+      operationId: viewUserChats
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: pageable
+          in: query
+          description: the pagination information.
+          required: true
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      responses:
+        '200':
+          description: List of user chats
+          headers:
+            pageable:
+              $ref: '#/components/headers/PageResponse'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Chat'
+
+  /users/chats/{login}:
+    get:
+      summary: Get chats for a user
+      tags: [Users]
+      operationId: viewUserChatsByLogin
+      parameters:
+        - name: login
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: pageable
+          in: query
+          description: the pagination information.
+          required: true
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      responses:
+        '200':
+          description: List of user chats
+          headers:
+            pageable:
+              $ref: '#/components/headers/PageResponse'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Chat'
+
+  /groups/remove/{group}/{login}:
+    post:
+      tags: [Groups]
+      operationId: remove
+      parameters:
+        - name: group
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: login
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /groups:
+    post:
+      tags: [Groups]
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGroupRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Group'
+    get:
+      summary: Get all Groups
+      tags: [ Groups ]
+      operationId: getGroups
+      parameters:
+        - name: pageable
+          in: query
+          description: the pagination information.
+          required: true
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      responses:
+        '200':
+          description: List of groups
+          headers:
+            pageable:
+              $ref: '#/components/headers/PageResponse'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Group'
+
+  /groups/add/{group}/{login}:
+    post:
+      tags: [Groups]
+      operationId: addUser
+      parameters:
+        - name: group
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: login
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/User'
+components:
+  headers:
+    PageResponse:
+      schema:
+        title: PageResponse
+        type: object
+        properties:
+          totalPages:
+            type: integer
+          totalElements:
+            type: integer
+            format: int32
+          size:
+            type: integer
+            example: 10
+          pageNumber:
+            type: integer
+            example: 0
+  schemas:
+    Pageable:
+      title: Pageable
+      type: object
+      properties:
+        pageSize:
+          type: integer
+          example: 20
+          description: Size of the requested page
+        pageNumber:
+          type: integer
+          example: 0
+          description: Page number of the requested page
+        sort:
+          type: string
+          example: "id,asc"
+          description: |
+            Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
+
+    UserRequest:
+      type: object
+      required:
+        - login
+      properties:
+        login:
+          type: string
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+
+    #    User:
+    #      type: object
+    #      properties:
+    #        id:
+    #          type: integer
+    #        login:
+    #          type: string
+    #        email:
+    #          type: string
+    #        firstName:
+    #          type: string
+    #        lastName:
+    #          type: string
+    #        groups:
+    #          type: array
+    #          items:
+    #            type: string
+    #          uniqueItems: true
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        login:
+          type: string
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        lastModifiedAt:
+          type: string
+          format: date-time
+        groups:
+          type: array
+          items:
+            $ref: "#/components/schemas/Group"
+          uniqueItems: true
+
+    ChatCreateRequest:
+      type: object
+      required:
+        - isGroup
+        - userIds
+      properties:
+        name:
+          type: string
+          description: Only for group chats
+          example: MyGroup1
+        description:
+          type: string
+          description: Only for group chats
+          example: This is about the group information
+        isGroup:
+          type: boolean
+        userIds:
+          type: array
+          items:
+            type: string
+            example: [683343787a40877498663716]
+
+    Chat:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        isGroup:
+          type: boolean
+        participants:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+
+    MessageRequest:
+      type: object
+      required:
+        - senderId
+        - content
+      properties:
+        senderId:
+          type: string
+        content:
+          type: string
+
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+        chatId:
+          type: string
+        senderId:
+          type: string
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    CreateGroupRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+
+    Group:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        lastModifiedAt:
+          type: string
+          format: date-time
