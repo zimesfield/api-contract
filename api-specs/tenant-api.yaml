@@ -57,15 +57,15 @@ paths:
           in: path
           schema:
             type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Tenant'
+      
       responses:
         '200':
           description: Company information is valid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+
         '404':
           description: Tenant not found
     put:
@@ -86,8 +86,12 @@ paths:
             schema:
               $ref: '#/components/schemas/TenantUpdateRequest'
       responses:
-        '200':
-          description: Company information is valid
+        '202':
+          description: Successfully updated Tenant information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
         '422':
           description: Validation failed
 
