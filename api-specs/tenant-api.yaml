@@ -239,8 +239,8 @@ components:
 
     TenantStatus:
       type: object
-      enum: [ ACTIVE, INACTIVE, SUSPENDED ]
-      example: ACTIVE
+      enum: [ PENDING, INACTIVE, SUSPENDED ]
+      example: PENDING
 
   securitySchemes:
     oauth:
