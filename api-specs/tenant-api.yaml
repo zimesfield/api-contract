@@ -31,7 +31,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TenantRegistrationRequest'
+              $ref: '#/components/schemas/CreateTenantRequest'
       responses:
         '201':
           description: Tenant successfully registered
@@ -85,7 +85,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TenantUpdateRequest'
+              $ref: '#/components/schemas/UpdateTenantRequest'
       responses:
         '202':
           description: Successfully updated Tenant information
@@ -137,7 +137,7 @@ components:
             type: integer
             example: 0
   schemas:
-    TenantRegistrationRequest:
+    CreateTenantRequest:
       type: object
       required: [tenantName, tenantEmail]
       properties:
@@ -149,7 +149,7 @@ components:
           format: email
           example: "test@zimesfield.com"
 
-    TenantUpdateRequest:
+    UpdateTenantRequest:
       type: object
       required: [phone, address]
       properties:
