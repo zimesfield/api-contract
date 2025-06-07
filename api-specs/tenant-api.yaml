@@ -235,9 +235,9 @@ components:
           type: string
           example: "Zimesfied limited"
         status:
-          $ref: "#/components/schemas/TenantStatus"
+          $ref: "#/components/schemas/Status"
 
-    TenantStatus:
+    Status:
       type: object
       enum: [ PENDING, ACTIVE, SUSPENDED ]
       example: PENDING
