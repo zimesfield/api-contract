@@ -100,7 +100,7 @@ paths:
         - oauth: [ zimesfield, email, profile ]
         - openId: [ zimesfield, email, profile ]
 
-  /tenants/{uuid/email:
+  /tenants/{uuid}/email:
     put:
       summary: Update tenant email
       tags:
