@@ -100,6 +100,38 @@ paths:
         - oauth: [ zimesfield, email, profile ]
         - openId: [ zimesfield, email, profile ]
 
+  /tenants/{uuid/email:
+    put:
+      summary: Update tenant email
+      tags:
+        - Tenant
+      operationId: updateTenantEmail
+      parameters:
+        - name: uuid
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTenantRequest'
+      responses:
+        '202':
+          description: Successfully updated Tenant information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+        '422':
+          $ref: './common/components/schemas.yaml#/components/schemas/Problem'
+
+      security:
+        - oauth: [ zimesfield, email, profile ]
+        - openId: [ zimesfield, email, profile ]
+
   /tenants/verify-token:
     post:
       summary: Verify registration token sent via email
@@ -231,7 +263,7 @@ components:
           type: string
           format: base64
           example: "tenant_001xyz"
-        companyName:
+        name:
           type: string
           example: "Zimesfied limited"
         status:
