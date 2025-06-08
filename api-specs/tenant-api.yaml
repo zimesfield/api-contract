@@ -171,7 +171,7 @@ components:
           type: string
           format: email
           example: "test@zimesfield.com"
-        phoneNumber:
+        phone:
           type: string
           example: "+2348012345678"
         createdAt:
