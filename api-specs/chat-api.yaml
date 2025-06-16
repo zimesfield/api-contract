@@ -126,7 +126,7 @@ paths:
         '201':
           description: Chat created
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/Chat'
 
