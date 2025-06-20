@@ -62,7 +62,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: 'https://opensource.zalando.com/problem/schema.yaml#/Problem'
+                $ref: './common/components/schemas.yaml#/components/schemas/Problem'
       security:
         - oauth: [ jhipster, email, profile ]
         - openId: [ jhipster, email, profile ]
@@ -90,7 +90,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: 'https://opensource.zalando.com/problem/schema.yaml#/Problem'
+                $ref: './common/components/schemas.yaml#/components/schemas/Problem'
       security:
         - oauth: [ jhipster, email, profile ]
         - openId: [ jhipster, email, profile ]
@@ -114,13 +114,13 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: 'https://opensource.zalando.com/problem/schema.yaml#/Problem'
+                $ref: './common/components/schemas.yaml#/components/schemas/Problem'
         400:
           description: Invalid key supplied
           content:
             application/problem+json:
               schema:
-                $ref: 'https://opensource.zalando.com/problem/schema.yaml#/Problem'
+                $ref: './common/components/schemas.yaml#/components/schemas/Problem'
 
   /api/authenticated:
     get:
@@ -140,13 +140,13 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: 'https://opensource.zalando.com/problem/schema.yaml#/Problem'
+                $ref: './common/components/schemas.yaml#/components/schemas/Problem'
         404:
           description: User not found
           content:
             application/problem+json:
               schema:
-                $ref: 'https://opensource.zalando.com/problem/schema.yaml#/Problem'
+                $ref: './common/components/schemas.yaml#/components/schemas/Problem'
       security:
         - oauth: [ jhipster, email, profile ]
         - openId: [ jhipster, email, profile ]
@@ -169,13 +169,13 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: 'https://opensource.zalando.com/problem/schema.yaml#/Problem'
+                $ref: './common/components/schemas.yaml#/components/schemas/Problem'
         404:
           description: User not found
           content:
             application/problem+json:
               schema:
-                $ref: 'https://opensource.zalando.com/problem/schema.yaml#/Problem'
+                $ref: './common/components/schemas.yaml#/components/schemas/Problem'
       security:
         - oauth: [ jhipster, email, profile ]
         - openId: [ jhipster, email, profile ]
@@ -203,13 +203,13 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: 'https://opensource.zalando.com/problem/schema.yaml#/Problem'
+                $ref: './common/components/schemas.yaml#/components/schemas/Problem'
         404:
           description: User not found
           content:
             application/problem+json:
               schema:
-                $ref: 'https://opensource.zalando.com/problem/schema.yaml#/Problem'
+                $ref: './common/components/schemas.yaml#/components/schemas/Problem'
       security:
         - oauth: [ jhipster, email, profile ]
         - openId: [ jhipster, email, profile ]
@@ -238,7 +238,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: 'https://opensource.zalando.com/problem/schema.yaml#/Problem'
+                $ref: './common/components/schemas.yaml#/components/schemas/Problem'
       security:
         - oauth: [ ]
         - openId: [ ]
@@ -911,7 +911,7 @@ components:
       content:
         'application/problem+json':
           schema:
-            $ref: 'https://opensource.zalando.com/problem/schema.yaml#/Problem'
+            $ref: './common/components/schemas.yaml#/components/schemas/Problem'
 
 
   securitySchemes:
@@ -920,10 +920,10 @@ components:
       description: OAuth2 authentication with KeyCloak
       flows:
         authorizationCode:
-          authorizationUrl: http://localhost:9080/realms/jhipster/protocol/openid-connect/auth
-          tokenUrl: http://localhost:9080/realms/jhipster/protocol/openid-connect/token
+          authorizationUrl: http://localhost:9080/realms/zimesfield/protocol/openid-connect/auth
+          tokenUrl: http://localhost:9080/realms/zimesfield/protocol/openid-connect/token
           scopes:
-            jhipster: Jhipster specific claims
+            openid: Zimesfeld specific claims
             email: Email claims
             profile: Profile claims
     openId:
