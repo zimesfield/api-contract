@@ -1,0 +1,31 @@
+post:
+  tags: [Authenticate]
+  summary: Authenticate a user and return a JWT token
+  operationId: login
+  requestBody:
+    description: Login credentials
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../common/components/schemas.yaml#/components/schemas/LoginRequest'
+  responses:
+    200:
+      description: Login successful
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/schemas.yaml#/components/schemas/JwtToken'
+    400:
+      description: Invalid credentials
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+    401:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+

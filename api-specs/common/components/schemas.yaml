@@ -71,6 +71,24 @@ components:
           description: |
             An absolute URI that identifies the specific occurrence of the problem.
             It may or may not yield further information if dereferenced.
+    LoginRequest:
+      type: object
+      required: [ username, password ]
+      properties:
+        username:
+          type: string
+          example: admin
+        password:
+          type: string
+          example: admin
+        rememberMe:
+          type: boolean
+          default: false
+    JwtToken:
+      type: object
+      properties:
+        id_token:
+          type: string
     Pageable:
       title: Pageable
       type: object
@@ -112,5 +130,29 @@ components:
           type: string
           example: Nigeria
 
+    MonthEnum:
+      type: string
+      enum:
+        - enum: [January,February,March,April,May,June,July,August,September,October,November,December]
+      example: January
 
-paths:
+    GenderEnum:
+      type: string
+      enum:
+        - enum: [Female, Male]
+      example: Male
+
+    MaritalStatusEnum:
+      type: string
+      enum:
+        - enum: [Single, Married, Divorced, Windowed]
+      example: Single
+
+    UserStatusEnum:
+      type: string
+      enum:
+        - active
+        - inactive
+        - suspended
+      default: active
+

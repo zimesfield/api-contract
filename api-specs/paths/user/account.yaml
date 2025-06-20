@@ -1,0 +1,54 @@
+get:
+  tags: [Account]
+  summary: Get the current user
+  operationId: getAccount
+  responses:
+    200:
+      description: successful operation
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/user/schema.yaml#/UserResponse'
+    400:
+      description: Invalid user supplied
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+    404:
+      description: User not found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+
+post:
+  tags: [Admin]
+  summary: Create new account information
+  operationId: saveAccount
+  requestBody:
+    description: Updated user object
+    content:
+      application/json:
+        schema:
+          $ref: '../../common/components/user/schema.yaml#/AdminRegistrationRequest'
+    required: true
+  responses:
+    200:
+      description: successful operation
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/user/schema.yaml#/UserResponse'
+    400:
+      description: Invalid user supplied
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+    404:
+      description: User not found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'

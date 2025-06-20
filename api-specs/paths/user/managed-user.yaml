@@ -1,0 +1,49 @@
+get:
+  tags: [Admin]
+  summary: get the "login" user
+  operationId: getUser
+  parameters:
+    - name: login
+      in: path
+      description: the login of the user to find
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: successful operation
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/user/schema.yaml#/UserResponse'
+    400:
+      description: Invalid username/password supplied
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+
+delete:
+  tags: [Admin]
+  summary: delete the "login" User
+  operationId: deleteUser
+  parameters:
+    - name: login
+      in: path
+      description: the login of the user to delete
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: successful operation
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/user/schema.yaml#/UserResponse'
+    400:
+      description: Invalid username/password supplied
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'

@@ -1,0 +1,25 @@
+post:
+  tags: [Register]
+  summary: Managed User Registration
+  operationId: registerAccount
+  requestBody:
+    description: register the user
+    content:
+      application/json:
+        schema:
+          $ref: '../../common/components/user/schema.yaml#/RegistrationRequest'
+    required: true
+  responses:
+    200:
+      description: successful operation
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/user/schema.yaml#/RegistrationResponse'
+    400:
+      description: Invalid information supplied
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+

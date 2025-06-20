@@ -1,0 +1,108 @@
+openapi: 3.0.1
+info:
+  title: YCP OLMPH User API Contract
+  description: |
+    This is the user contract for registration, authentication, and account management.
+    Learn more at [https://ycpolmphajah.com](https://ycpolmphajah.com).
+  termsOfService: https://swagger.io/terms/
+  contact:
+    email: comenuko@zimesfield.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+
+servers:
+  - url: '{protocol}://{environment}/services/user'
+    variables:
+      protocol:
+        enum: [http, https]
+        default: http
+      environment:
+        default: localhost:8081
+        enum:
+          - localhost:8081
+          - api
+          - api.dev
+          - api.staging
+
+tags:
+  - name: Auth
+    description: User authentication and login
+  - name: Account
+    description: Manage user account settings
+  - name: Admin
+    description: Admin operations on users
+  - name: Register
+    description: Registration endpoints
+
+paths:
+  /api/login:
+    post:
+      tags: [Auth]
+      summary: Authenticate user and return JWT
+      operationId: loginUser
+      requestBody:
+        description: Login credentials
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        200:
+          description: JWT token response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtToken'
+        401:
+          description: Invalid credentials
+          content:
+            application/problem+json:
+              schema:
+                $ref: './common/components/schemas.yaml#/components/schemas/Problem'
+
+# Existing paths omitted here for brevity — they remain unchanged from your full spec above.
+# This example adds only the improved structure and the new login endpoint.
+
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          type: string
+          example: admin
+        password:
+          type: string
+          example: admin
+        rememberMe:
+          type: boolean
+          default: false
+    JwtToken:
+      type: object
+      properties:
+        id_token:
+          type: string
+
+  securitySchemes:
+    oauth:
+      type: oauth2
+      description: OAuth2 with Keycloak
+      flows:
+        authorizationCode:
+          authorizationUrl: http://localhost:9080/realms/zimesfield/protocol/openid-connect/auth
+          tokenUrl: http://localhost:9080/realms/zimesfield/protocol/openid-connect/token
+          scopes:
+            openid: Zimesfeld specific claims
+            email: Email claims
+            profile: Profile claims
+    openId:
+      type: openIdConnect
+      openIdConnectUrl: http://localhost:9080/realms/jhipster/.well-known/openid-configuration
+
+security:
+  - oauth: [openid, email, profile]
+  - openId: [openid, email, profile]

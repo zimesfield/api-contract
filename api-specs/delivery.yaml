@@ -201,7 +201,7 @@ paths:
   #                        schema:
   #                            $ref: "#/components/schemas/DeliveryRequest"
   #
-  #            responses:
+  #            schema.yaml:
   #                "200":
   #                    description: returns total delivery
   #                    content:

@@ -1,0 +1,24 @@
+get:
+  tags: [Account]
+  summary: Activate a registered user
+  operationId: activateAccount
+  parameters:
+    - name: key
+      in: query
+      description: 'The activation key'
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: successful operation
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+    400:
+      description: Invalid key supplied
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
