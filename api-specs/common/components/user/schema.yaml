@@ -1,0 +1,180 @@
+UserResponse:
+  type: object
+  properties:
+    uuid:
+      type: string
+      format: base64
+    login:
+      type: string
+      example: omens
+    firstName:
+      type: string
+      example: Omens
+    lastName:
+      type: string
+      example: Odinaka
+    email:
+      type: string
+      example: test@test
+    imageUrl:
+      type: string
+      example: qazwsx
+    phone:
+      type: string
+      example: 07012345678
+    activated:
+      type: string
+      example: true
+    createdBy:
+      type: string
+      example: omens
+    createdDate:
+      type: string
+      example: "2021-09-07"
+    lastModifiedBy:
+      type: string
+      example: omens
+    lastModifiedDate:
+      type: string
+      example: "2021-09-07"
+    address:
+      $ref: '../schemas.yaml#/components/schemas/Address'
+    dayOfBirth:
+      type: string
+      example: 5
+    monthOfBirth:
+      $ref: "../schemas.yaml#/components/schemas/MonthEnum"
+
+    authorities:
+      type: array
+      items:
+        type: string
+    userStatus:
+      $ref: "../schemas.yaml#/components/schemas/UserStatusEnum"
+
+AdminRegistrationRequest:
+    type: object
+    required:
+      - login
+      - firstName
+      - lastName
+      - email
+      - password
+      - phone
+      - address
+    properties:
+      uuid:
+        type: string
+        format: base64
+      login:
+        type: string
+        example: omens
+      firstName:
+        type: string
+        example: Omens
+      lastName:
+        type: string
+        example: Odinaka
+      email:
+        type: string
+        example: test@test
+      imageUrl:
+        type: string
+        example: qazwsx
+      phone:
+        type: string
+        example: 07012345678
+      address:
+        $ref: '../schemas.yaml#/components/schemas/Address'
+      authorities:
+        type: array
+        items:
+          type: string
+      userStatus:
+        $ref: '../schemas.yaml#/components/schemas/UserStatusEnum'
+
+RegistrationRequest:
+  type: object
+  required:
+    - login
+    - firstName
+    - lastName
+    - email
+    - password
+    - phone
+    - address
+    - dayOfBirth
+    - monthOfBirth
+  properties:
+    login:
+      type: string
+      example: omens
+    firstName:
+      type: string
+      example: Omens
+    lastName:
+      type: string
+      example: Odinaka
+    email:
+      type: string
+      example: test@test
+    phone:
+      type: string
+      example: 07012345678
+    address:
+        $ref: '../schemas.yaml#/components/schemas/Address'
+    dayOfBirth:
+      type: string
+      example: 5
+    maritalStatus:
+        $ref: '../schemas.yaml#/components/schemas/MaritalStatusEnum'
+    gender:
+        $ref: '../schemas.yaml#/components/schemas/GenderEnum'
+    monthOfBirth:
+        $ref: "../schemas.yaml#/components/schemas/MonthEnum"
+
+RegistrationResponse:
+  type: object
+  properties:
+    uuid:
+      type: string
+      format: base64
+    login:
+      type: string
+      example: omens
+    firstName:
+      type: string
+      example: Omens
+    lastName:
+      type: string
+      example: Odinaka
+    email:
+      type: string
+      example: test@test
+
+PasswordChangeRequest:
+  type: object
+  required:
+    - currentPassword
+    - newPassword
+  properties:
+    currentPassword:
+      type: string
+      example: test@123
+    newPassword:
+      type: string
+      example: 123@test
+
+KeyAndPasswordRequest:
+  type: object
+  required:
+    - key
+    - newPassword
+  properties:
+    key:
+      type: string
+      example: test@123
+    newPassword:
+      type: string
+      example: 123@test
+
