@@ -1,0 +1,74 @@
+CreateTenantRequest:
+  type: object
+  required: [tenantName, tenantEmail]
+  properties:
+    name:
+      type: string
+      example: "Zimesfield Limited"
+    email:
+      type: string
+      format: email
+      example: "test@zimesfield.com"
+
+UpdateTenantRequest:
+  type: object
+  required: [phone, address]
+  properties:
+    phone:
+      type: string
+      example: "+2348012345678"
+    address:
+      $ref: '../schemas.yaml#/components/schemas/Address'
+
+TenantResponse:
+  type: object
+  properties:
+    tenantId:
+      type: string
+      format: base64
+      example: "tenant_001xyz"
+    name:
+      type: string
+      example: "Zimesfied limited"
+    status:
+      $ref: "#/TenantStatus"
+
+TenantStatus:
+  type: object
+  enum: [ PENDING, ACTIVE, SUSPENDED ]
+  example: PENDING
+
+Tenant:
+  type: object
+  properties:
+    tenantId:
+      type: string
+      example: "Zimesfield Limited"
+    name:
+      type: string
+      example: "Zimesfield Limited"
+    email:
+      type: string
+      format: email
+      example: "test@zimesfield.com"
+    phone:
+      type: string
+      example: "+2348012345678"
+    createdAt:
+      type: string
+      format: date-time
+      example: "2025-06-04T14:00:00+01:00"
+    updatedAt:
+      type: string
+      format: date-time
+      example: "2025-06-04T14:00:00+01:00"
+    address:
+      $ref: '../schemas.yaml#/components/schemas/Address'
+
+TokenVerificationRequest:
+  type: object
+  required: [token]
+  properties:
+    token:
+      type: string
+      example: "abc123-def456"

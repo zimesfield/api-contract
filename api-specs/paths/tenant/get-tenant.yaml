@@ -1,0 +1,27 @@
+getTenant:
+  get:
+    summary: Retrieves tenant information
+    tags:
+      - Tenant
+    operationId: getTenantInformation
+    parameters:
+      - name: uuid
+        required: true
+        in: path
+        schema:
+          type: string
+
+  responses:
+    '200':
+      description: Company information is valid
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/tenant/schema.yaml#/Tenant'
+    404:
+      description: No Tenant Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+

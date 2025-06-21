@@ -1,0 +1,30 @@
+post:
+  summary: Register a new tenant
+  tags: [Register]
+  operationId: register
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../common/components/tenant/schema.yaml#/CreateTenantRequest'
+  responses:
+    '201':
+      description: Tenant successfully registered
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/tenant/schema.yaml#/TenantResponse'
+    400:
+      description: Invalid Information Supplied
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+    409:
+      description: Tenant already exist
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+

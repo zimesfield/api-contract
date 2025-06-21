@@ -1,0 +1,16 @@
+zimesfield:
+  oauth:
+    type: oauth2
+    description: OAuth2 authentication with KeyCloak
+    flows:
+      authorizationCode:
+        authorizationUrl: http://localhost:9080/realms/zimesfield/protocol/openid-connect/auth
+        tokenUrl: http://localhost:9080/realms/zimesfield/protocol/openid-connect/token
+        scopes:
+          openid: Zimesfeld specific claims
+          email: Email claims
+          profile: Profile claims
+  openId:
+    type: openIdConnect
+    description: OpenID Connect authentication with KeyCloak
+    openIdConnectUrl: http://localhost:9080/realms/zimesfield/.well-known/openid-configuration

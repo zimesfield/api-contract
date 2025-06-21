@@ -430,24 +430,6 @@ components:
         lastName:
           type: string
 
-    #    User:
-    #      type: object
-    #      properties:
-    #        id:
-    #          type: integer
-    #        login:
-    #          type: string
-    #        email:
-    #          type: string
-    #        firstName:
-    #          type: string
-    #        lastName:
-    #          type: string
-    #        groups:
-    #          type: array
-    #          items:
-    #            type: string
-    #          uniqueItems: true
     User:
       type: object
       properties:

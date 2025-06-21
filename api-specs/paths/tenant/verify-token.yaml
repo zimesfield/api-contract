@@ -1,0 +1,16 @@
+post:
+  summary: Verify registration token sent via email
+  tags:
+    - Token
+  operationId: verifyToken
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../common/components/tenant/schema.yaml#/TokenVerificationRequest'
+  responses:
+    '200':
+      description: Token is valid
+    '400':
+      $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'

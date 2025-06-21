@@ -1,0 +1,56 @@
+get:
+  summary: Retrieves tenant information
+  tags:
+    - Tenant
+  operationId: getTenantInformation
+  parameters:
+    - name: uuid
+      required: true
+      in: path
+      schema:
+        type: string
+
+  responses:
+    '200':
+      description: Company information is valid
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/tenant/schema.yaml#/Tenant'
+    404:
+      description: No Tenant Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+
+put:
+  summary: Update tenant information
+  tags:
+    - Tenant
+  operationId: updateTenantInformation
+  parameters:
+    - name: uuid
+      required: true
+      in: path
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../common/components/tenant/schema.yaml#/UpdateTenantRequest'
+  responses:
+    202:
+      description: Successfully updated Tenant information
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/tenant/schema.yaml#/Tenant'
+    400:
+      description: Invalid Information Supplied
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'

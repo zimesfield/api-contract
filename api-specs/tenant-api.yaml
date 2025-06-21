@@ -18,275 +18,37 @@ servers:
         enum:
           - localhost:8082
           - tenant.zimesfield.com
+  - url: '{protocol}://{environment}/api'
+    description: Production server
+    variables:
+      protocol:
+        enum:
+          - http
+          - https
+        default: http
+      environment:
+        default: l.zimesfield.com    # Local server
+        enum:
+          - localhost:9080
+          - keycloak.zimesfield.com
+security:
+  - oauth: [ tenant, email, profile ]
+  - openId: [ tenant, email, profile ]
 
 paths:
   /tenants/register:
-    post:
-      summary: Register a new tenant
-      tags:
-        - Tenant
-      operationId: registerTenant
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateTenantRequest'
-      responses:
-        '201':
-          description: Tenant successfully registered
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TenantResponse'
-        '400':
-          $ref: './common/components/schemas.yaml#/components/schemas/Problem'
-        '409':
-          $ref: './common/components/schemas.yaml#/components/schemas/Problem'
+    $ref: './paths/tenant/register.yaml'
 
   /tenants/{uuid}:
-    get:
-      summary: Retrieves tenant information
-      tags:
-        - Tenant
-      operationId: getTenantInformation
-      parameters:
-        - name: uuid
-          required: true
-          in: path
-          schema:
-            type: string
-
-      responses:
-        '200':
-          description: Company information is valid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Tenant'
-        '404':
-          $ref: './common/components/schemas.yaml#/components/schemas/Problem'
-      security:
-        - oauth: [ zimesfield, email, profile ]
-        - openId: [ zimesfield, email, profile ]
-    put:
-      summary: Complete tenant registration
-      tags:
-        - Tenant
-      operationId: updateTenantInformation
-      parameters:
-        - name: uuid
-          required: true
-          in: path
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateTenantRequest'
-      responses:
-        '202':
-          description: Successfully updated Tenant information
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Tenant'
-        '422':
-          $ref: './common/components/schemas.yaml#/components/schemas/Problem'
-
-      security:
-        - oauth: [ zimesfield, email, profile ]
-        - openId: [ zimesfield, email, profile ]
+    $ref: './paths/tenant/tenant.yaml'
 
   /tenants/{uuid}/email:
-    put:
-      summary: Update tenant email
-      tags:
-        - Tenant
-      operationId: updateTenantEmail
-      parameters:
-        - name: uuid
-          required: true
-          in: path
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateTenantRequest'
-      responses:
-        '202':
-          description: Successfully updated Tenant information
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Tenant'
-        '422':
-          $ref: './common/components/schemas.yaml#/components/schemas/Problem'
-
-      security:
-        - oauth: [ zimesfield, email, profile ]
-        - openId: [ zimesfield, email, profile ]
+    $ref: './paths/tenant/update-email.yaml'
 
   /tenants/verify-token:
-    post:
-      summary: Verify registration token sent via email
-      tags:
-        - Token
-      operationId: verifyToken
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TokenVerificationRequest'
-      responses:
-        '200':
-          description: Token is valid
-        '400':
-          $ref: './common/components/schemas.yaml#/components/schemas/Problem'
+    $ref: './paths/tenant/verify-token.yaml'
 
 components:
-  headers:
-    PageResponse:
-      schema:
-        title: PageResponse
-        type: object
-        properties:
-          totalPages:
-            type: integer
-          totalElements:
-            type: integer
-            format: int32
-          size:
-            type: integer
-            example: 10
-          pageNumber:
-            type: integer
-            example: 0
-  schemas:
-    CreateTenantRequest:
-      type: object
-      required: [tenantName, tenantEmail]
-      properties:
-        name:
-          type: string
-          example: "Zimesfield Limited"
-        email:
-          type: string
-          format: email
-          example: "test@zimesfield.com"
-
-    UpdateTenantRequest:
-      type: object
-      required: [phone, address]
-      properties:
-        phone:
-          type: string
-          example: "+2348012345678"
-        address:
-          $ref: './common/components/schemas.yaml#/components/schemas/Address'
-    Tenant:
-      type: object
-      properties:
-        tenantId:
-          type: string
-          example: "Zimesfield Limited"
-        name:
-          type: string
-          example: "Zimesfield Limited"
-        email:
-          type: string
-          format: email
-          example: "test@zimesfield.com"
-        phone:
-          type: string
-          example: "+2348012345678"
-        createdAt:
-          type: string
-          format: date-time
-          example: "2025-06-04T14:00:00+01:00"
-        updatedAt:
-          type: string
-          format: date-time
-          example: "2025-06-04T14:00:00+01:00"
-        address:
-          $ref: './common/components/schemas.yaml#/components/schemas/Address'
-
-    TenantValidationRequest:
-      type: object
-      required:
-        - companyName
-        - adminEmail
-      properties:
-        companyName:
-          type: string
-          example: "Zimsefield Limited"
-        adminEmail:
-          type: string
-          example: "admin@zimes.com"
-
-    TokenVerificationRequest:
-      type: object
-      required: [token]
-      properties:
-        token:
-          type: string
-          example: "abc123-def456"
-
-    EmailRequest:
-      type: object
-      required:
-        - to
-        - subject
-        - message
-      properties:
-        to:
-          type: string
-          format: email
-          example: "admin@zimes.com"
-        subject:
-          type: string
-          example: "Welcome to the Tenant Portal"
-        message:
-          type: string
-          example: "Your registration was successful. Here’s how to log in..."
-
-    TenantResponse:
-      type: object
-      properties:
-        tenantId:
-          type: string
-          format: base64
-          example: "tenant_001xyz"
-        name:
-          type: string
-          example: "Zimesfied limited"
-        status:
-          $ref: "#/components/schemas/Status"
-
-    Status:
-      type: object
-      enum: [ PENDING, ACTIVE, SUSPENDED ]
-      example: PENDING
-
   securitySchemes:
     oauth:
-      type: oauth2
-      description: OAuth2 authentication with KeyCloak
-      flows:
-        authorizationCode:
-          authorizationUrl: http://localhost:9080/realms/zimesfield/protocol/openid-connect/auth
-          tokenUrl: http://localhost:9080/realms/zimesfield/protocol/openid-connect/token
-          scopes:
-            openid: Zimesfeld specific claims
-            email: Email claims
-            profile: Profile claims
-    openId:
-      type: openIdConnect
-      description: OpenID Connect authentication with KeyCloak
-      openIdConnectUrl: http://localhost:9080/realms/jhipster/.well-known/openid-configuration
+      $ref: './paths/security.yaml#/zimesfield/oauth'
