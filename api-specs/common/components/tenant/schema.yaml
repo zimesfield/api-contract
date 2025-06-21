@@ -58,7 +58,7 @@ Tenant:
       type: string
       format: date-time
       example: "2025-06-04T14:00:00+01:00"
-    updatedAt:
+    lastModifiedAt:
       type: string
       format: date-time
       example: "2025-06-04T14:00:00+01:00"

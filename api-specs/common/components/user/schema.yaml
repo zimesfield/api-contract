@@ -28,13 +28,13 @@ UserResponse:
     createdBy:
       type: string
       example: omens
-    createdDate:
+    createdAt:
       type: string
       example: "2021-09-07"
     lastModifiedBy:
       type: string
       example: omens
-    lastModifiedDate:
+    lastModifiedAt:
       type: string
       example: "2021-09-07"
     address:
@@ -44,7 +44,6 @@ UserResponse:
       example: 5
     monthOfBirth:
       $ref: "../schemas.yaml#/components/schemas/MonthEnum"
-
     authorities:
       type: array
       items:
