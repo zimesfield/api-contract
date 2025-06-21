@@ -34,7 +34,7 @@ TenantResponse:
       $ref: "#/TenantStatus"
 
 TenantStatus:
-  type: object
+  type: string
   enum: [ PENDING, ACTIVE, SUSPENDED ]
   example: PENDING
 
