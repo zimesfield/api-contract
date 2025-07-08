@@ -2,7 +2,7 @@ post:
   summary: Verify registration token sent via email
   tags:
     - Token
-  operationId: verifyToken
+  operationId: submitToken
   requestBody:
     required: true
     content:
