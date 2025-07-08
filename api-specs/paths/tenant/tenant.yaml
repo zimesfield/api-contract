@@ -11,12 +11,19 @@ get:
         type: string
 
   responses:
-    '200':
+    200:
       description: Company information is valid
       content:
         application/json:
           schema:
             $ref: '../../common/components/tenant/schema.yaml#/Tenant'
+    400:
+      description: Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+
     404:
       description: No Tenant Found
       content:

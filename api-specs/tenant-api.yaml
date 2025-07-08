@@ -45,7 +45,7 @@ paths:
   /tenants/{uuid}/email:
     $ref: './paths/tenant/update-email.yaml'
 
-  /tenants/verify-token:
+  /tenants/verify/{token}:
     $ref: './paths/tenant/verify-token.yaml'
 
 components:
