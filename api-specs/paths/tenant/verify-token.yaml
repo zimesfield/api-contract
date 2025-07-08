@@ -14,3 +14,25 @@ post:
       description: Token is valid
     '400':
       $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+get:
+  summary: Verify registration token sent via click
+  tags:
+    - Token
+  operationId: verifyToken
+  parameters:
+    - name: token
+      required: true
+      in: path
+      schema:
+        type: string
+#  requestBody:
+#    required: true
+#    content:
+#      application/json:
+#        schema:
+#          $ref: '../../common/components/tenant/schema.yaml#/TokenVerificationRequest'
+  responses:
+    '200':
+      description: Token is valid
+    '400':
+      $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
