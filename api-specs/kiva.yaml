@@ -1,0 +1,1341 @@
+openapi: 3.0.3
+info:
+  title: Arkiva User & Account API
+  version: 1.0.0
+  description: |
+    API for Arkiva — account management, authentication, admin user management,
+    announcements, attendance tracking, events, and summaries.
+    All endpoints use the `/api` prefix.
+servers:
+  - url: http://localhost:8080
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Authentication
+    description: Authentication endpoints (login, check authentication)
+  - name: Account
+    description: Endpoints for self-service account management (registration, activation, password)
+  - name: Admin Users
+    description: Administrative user management (requires ADMIN authority)
+  - name: Announcements
+    description: CRUD operations for announcements
+  - name: Attendance
+    description: CRUD and query operations for attendance tracking
+  - name: Event
+    description: CRUD and query operations for events
+  - name: Summary
+    description: CRUD and query operations for event summaries
+
+paths:
+
+  ###############################################################
+  # AUTHENTICATION
+  ###############################################################
+  /api/authenticate:
+    post:
+      tags: [Authentication]
+      summary: Authenticate a user and return a JWT
+      description: |
+        Authenticate using username and password. Returns a JWT token (in body and Authorization header).
+        Use the `Bearer` token in Authorization header for authenticated endpoints.
+      operationId: authenticateUser
+      requestBody:
+        description: Username and password
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginVM'
+            examples:
+              standard:
+                summary: Login example
+                value:
+                  username: "jdoe"
+                  password: "P@ssw0rd!"
+                  rememberMe: false
+      responses:
+        '200':
+          description: Authentication successful — returns JWT
+          headers:
+            Authorization:
+              description: Bearer token (also in response body)
+              schema:
+                type: string
+                example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWTToken'
+              examples:
+                success:
+                  summary: Example JWT response
+                  value:
+                    id_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    get:
+      tags: [Authentication]
+      summary: Check whether current request is authenticated
+      description: Returns 204 No Content if authenticated, 401 if not.
+      responses:
+        '204':
+          description: Authenticated
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  ###############################################################
+  # ACCOUNT RESOURCE
+  ###############################################################
+  /api/register:
+    post:
+      tags: [Account]
+      summary: Register a new user account
+      description: Register a new user. An activation email will be sent to the supplied email address.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ManagedUserVM'
+            examples:
+              newUser:
+                summary: Create new user
+                value:
+                  login: "jdoe"
+                  password: "P@ssw0rd!"
+                  firstName: "John"
+                  lastName: "Doe"
+                  email: "jdoe@example.com"
+                  langKey: "en"
+      responses:
+        '201':
+          description: User created (activation email sent)
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/activate:
+    get:
+      tags: [Account]
+      summary: Activate a registered user
+      description: Activate account using an activation `key` sent by email.
+      parameters:
+        - name: key
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Activation key
+      responses:
+        '200':
+          description: Account activated
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/Internal'
+
+  /api/account:
+    get:
+      tags: [Account]
+      summary: Get current user's account details
+      description: Returns the currently authenticated user's profile.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Current user profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminUserDTO'
+              examples:
+                me:
+                  summary: Example current user
+                  value:
+                    id: "123e4567-e89b-12d3-a456-426614174000"
+                    login: "jdoe"
+                    email: "jdoe@example.com"
+                    firstName: "John"
+                    lastName: "Doe"
+                    langKey: "en"
+                    authorities: ["ROLE_USER"]
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      tags: [Account]
+      summary: Update the current user's profile
+      description: Update basic user fields. Email must be unique.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminUserDTO'
+            examples:
+              updateProfile:
+                summary: Update profile example
+                value:
+                  id: "123e4567-e89b-12d3-a456-426614174000"
+                  login: "jdoe"
+                  email: "jdoe@newmail.example"
+                  firstName: "John"
+                  lastName: "D."
+                  langKey: "en"
+      responses:
+        '200':
+          description: Profile updated
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/account/change-password:
+    post:
+      tags: [Account]
+      summary: Change current user's password
+      description: Requires the current password and the new password. New password must meet length constraints.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordChangeDTO'
+            examples:
+              changePassword:
+                value:
+                  currentPassword: "OldP@ss1"
+                  newPassword: "N3wP@ssw0rd!"
+      responses:
+        '200':
+          description: Password changed
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/account/reset-password/init:
+    post:
+      tags: [Account]
+      summary: Initiate password reset
+      description: Sends (or pretends to send) a password reset email. Always returns 200 for security.
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: string
+            examples:
+              email:
+                value: "jdoe@example.com"
+      responses:
+        '200':
+          description: Password reset email sent (or faked)
+
+  /api/account/reset-password/finish:
+    post:
+      tags: [Account]
+      summary: Complete password reset
+      description: Provide reset `key` and `newPassword` to finish the reset process.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeyAndPasswordVM'
+            examples:
+              resetFinish:
+                value:
+                  key: "reset-key-abcdef"
+                  newPassword: "N3wP@ssw0rd!"
+      responses:
+        '200':
+          description: Password reset completed
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  ###############################################################
+  # ADMIN USER RESOURCE
+  ###############################################################
+  /api/admin/users:
+    post:
+      tags: [Admin Users]
+      summary: Create a new user (admin only)
+      description: Creates a managed user and sends a creation email.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminUserDTO'
+            examples:
+              createAdminUser:
+                value:
+                  login: "asmith"
+                  email: "asmith@example.com"
+                  firstName: "Alice"
+                  lastName: "Smith"
+                  authorities: ["ROLE_USER"]
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+        '400':
+          $ref: '#/components/responses/Conflict'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    put:
+      tags: [Admin Users]
+      summary: Update user (admin only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminUserDTO'
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminUserDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    get:
+      tags: [Admin Users]
+      summary: Get list of managed users (admin only)
+      description: Returns a paginated list of users. Use `page` and `size` for pagination and `sort` for ordering.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: List of managed users
+          headers:
+            X-Total-Count:
+              description: Total number of user records
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AdminUserDTO'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/admin/users/{login}:
+    parameters:
+      - name: login
+        in: path
+        required: true
+        schema:
+          type: string
+        description: User login (username)
+    get:
+      tags: [Admin Users]
+      summary: Get a managed user by login (admin only)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Managed user returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminUserDTO'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [Admin Users]
+      summary: Update managed user by login (admin only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminUserDTO'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminUserDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags: [Admin Users]
+      summary: Delete managed user by login (admin only)
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  ###############################################################
+  # ANNOUNCEMENTS RESOURCE
+  ###############################################################
+  /api/announcements:
+    post:
+      tags: [Announcements]
+      summary: Create an announcement
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnnouncementDTO'
+            examples:
+              newAnnouncement:
+                value:
+                  title: "Tiki Party Success"
+                  content: "Thanks to everyone who attended. We had a safe and joyful event!"
+      responses:
+        '201':
+          description: Announcement created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnouncementDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+    get:
+      tags: [Announcements]
+      summary: List announcements (filter + pagination)
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+        - in: query
+          name: title
+          schema:
+            type: string
+        - in: query
+          name: createdBy
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Announcement list
+          headers:
+            X-Total-Count:
+              description: Total number of announcements
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AnnouncementDTO'
+
+  /api/announcements/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags: [Announcements]
+      summary: Get announcement by id
+      responses:
+        '200':
+          description: Announcement found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnouncementDTO'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [Announcements]
+      summary: Update announcement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnnouncementDTO'
+      responses:
+        '200':
+          description: Updated announcement
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnouncementDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags: [Announcements]
+      summary: Partially update announcement (merge-patch)
+      requestBody:
+        required: true
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/AnnouncementDTO'
+      responses:
+        '200':
+          description: Updated (partial)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnouncementDTO'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags: [Announcements]
+      summary: Delete announcement
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  ###############################################################
+  # ATTENDANCE RESOURCE
+  ###############################################################
+  /api/attendances:
+    post:
+      tags: [Attendance]
+      summary: Create an attendance record
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttendanceDTO'
+            examples:
+              createAttendance:
+                value:
+                  memberId: 42
+                  status: "PRESENT"
+                  date: "2025-12-01"
+      responses:
+        '201':
+          description: Attendance created
+          headers:
+            Location:
+              description: URI of the created attendance
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttendanceDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    get:
+      tags: [Attendance]
+      summary: List attendances (filter + pagination)
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+        - $ref: '#/components/parameters/AttendanceCriteria'
+      responses:
+        '200':
+          description: Attendance list
+          headers:
+            X-Total-Count:
+              description: Total number of attendance records
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AttendanceDTO'
+
+  /api/attendances/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags: [Attendance]
+      summary: Get attendance by id
+      responses:
+        '200':
+          description: Attendance found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttendanceDTO'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [Attendance]
+      summary: Update attendance by id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttendanceDTO'
+      responses:
+        '200':
+          description: Updated attendance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttendanceDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags: [Attendance]
+      summary: Partially update attendance (merge-patch)
+      requestBody:
+        required: true
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/AttendanceDTO'
+      responses:
+        '200':
+          description: Updated (partial)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttendanceDTO'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags: [Attendance]
+      summary: Delete attendance
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  ###############################################################
+  # EVENTS RESOURCE
+  ###############################################################
+  /api/events:
+    post:
+      tags: [Event]
+      summary: Create an event
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventDTO'
+            examples:
+              newEvent:
+                value:
+                  name: "Annual General Meeting"
+                  location: "Main Hall"
+                  date: "2025-12-15T18:00:00Z"
+                  description: "Year-end review and planning"
+      responses:
+        '201':
+          description: Event created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    get:
+      tags: [Event]
+      summary: List events (filter + pagination)
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+        - $ref: '#/components/parameters/EventCriteria'
+      responses:
+        '200':
+          description: Event list
+          headers:
+            X-Total-Count:
+              description: Total number of events
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventDTO'
+
+  /api/events/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags: [Event]
+      summary: Get event by id
+      responses:
+        '200':
+          description: Event found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventDTO'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [Event]
+      summary: Update event by id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventDTO'
+      responses:
+        '200':
+          description: Updated event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags: [Event]
+      summary: Partially update event (merge-patch)
+      requestBody:
+        required: true
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/EventDTO'
+      responses:
+        '200':
+          description: Updated (partial)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventDTO'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags: [Event]
+      summary: Delete event
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  ###############################################################
+  # SUMMARIES RESOURCE
+  ###############################################################
+  /api/summaries:
+    post:
+      tags: [Summary]
+      summary: Create a summary
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SummaryDTO'
+            examples:
+              newSummary:
+                value:
+                  eventId: 123
+                  content: "Summary of the meeting outcomes."
+      responses:
+        '201':
+          description: Summary created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SummaryDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    get:
+      tags: [Summary]
+      summary: List summaries (filter + pagination)
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+        - $ref: '#/components/parameters/SummaryCriteria'
+      responses:
+        '200':
+          description: Summary list
+          headers:
+            X-Total-Count:
+              description: Total number of summaries
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SummaryDTO'
+
+  /api/summaries/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags: [Summary]
+      summary: Get summary by id
+      responses:
+        '200':
+          description: Summary found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SummaryDTO'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [Summary]
+      summary: Update summary by id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SummaryDTO'
+      responses:
+        '200':
+          description: Updated summary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SummaryDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags: [Summary]
+      summary: Partially update summary (merge-patch)
+      requestBody:
+        required: true
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/SummaryDTO'
+      responses:
+        '200':
+          description: Updated (partial)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SummaryDTO'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags: [Summary]
+      summary: Delete summary
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+
+    LoginVM:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          example: "johndoe"
+        password:
+          type: string
+          format: password
+          example: "P@ssw0rd!"
+        rememberMe:
+          type: boolean
+          description: Whether to remember login across sessions
+          example: false
+
+    JWTToken:
+      type: object
+      properties:
+        id_token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+
+    PasswordChangeDTO:
+      type: object
+      required:
+        - currentPassword
+        - newPassword
+      properties:
+        currentPassword:
+          type: string
+          format: password
+          example: "OldP@ss1"
+        newPassword:
+          type: string
+          format: password
+          minLength: 4
+          maxLength: 100
+          example: "N3wP@ssw0rd!"
+
+    KeyAndPasswordVM:
+      type: object
+      required:
+        - key
+        - newPassword
+      properties:
+        key:
+          type: string
+          example: "reset-key-123456"
+        newPassword:
+          type: string
+          format: password
+          minLength: 4
+          maxLength: 100
+          example: "N3wP@ssw0rd!"
+
+    ManagedUserVM:
+      type: object
+      required:
+        - login
+        - password
+        - email
+      properties:
+        login:
+          type: string
+          pattern: "^[_.@A-Za-z0-9-]*$"
+          minLength: 1
+          maxLength: 50
+          example: "jdoe"
+        password:
+          type: string
+          format: password
+          minLength: 4
+          maxLength: 100
+          example: "P@ssw0rd!"
+        firstName:
+          type: string
+          maxLength: 50
+          example: "John"
+        lastName:
+          type: string
+          maxLength: 50
+          example: "Doe"
+        email:
+          type: string
+          format: email
+          minLength: 5
+          maxLength: 254
+          example: "jdoe@example.com"
+        activated:
+          type: boolean
+          example: true
+        langKey:
+          type: string
+          minLength: 2
+          maxLength: 6
+          example: "en"
+        imageUrl:
+          type: string
+          format: uri
+          example: "http://example.com/image.png"
+        authorities:
+          type: array
+          items:
+            type: string
+          example: ["ROLE_USER"]
+
+    AdminUserDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        login:
+          type: string
+          example: "jdoe"
+        firstName:
+          type: string
+          example: "John"
+        lastName:
+          type: string
+          example: "Doe"
+        email:
+          type: string
+          format: email
+          example: "jdoe@example.com"
+        activated:
+          type: boolean
+          example: true
+        langKey:
+          type: string
+          example: "en"
+        imageUrl:
+          type: string
+          format: uri
+          nullable: true
+        authorities:
+          type: array
+          items:
+            type: string
+          example: ["ROLE_USER"]
+
+    UserDTO:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/AdminUserDTO'
+
+    AnnouncementDTO:
+      type: object
+      required:
+        - title
+        - content
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 123
+        title:
+          type: string
+          maxLength: 255
+          example: "Annual Meeting Announcement"
+        content:
+          type: string
+          example: "The annual meeting will be held on December 15th."
+        createdBy:
+          type: string
+          example: "admin"
+        createdDate:
+          type: string
+          format: date-time
+          example: "2025-11-01T12:00:00Z"
+        lastModifiedBy:
+          type: string
+          example: "admin"
+        lastModifiedDate:
+          type: string
+          format: date-time
+          example: "2025-11-02T10:00:00Z"
+
+    AttendanceDTO:
+      type: object
+      required:
+        - memberId
+        - status
+        - date
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 456
+        memberId:
+          type: integer
+          example: 42
+        status:
+          type: string
+          enum: [PRESENT, ABSENT, EXCUSED]
+          example: "PRESENT"
+        date:
+          type: string
+          format: date
+          example: "2025-12-01"
+        remarks:
+          type: string
+          example: "Arrived late"
+        createdDate:
+          type: string
+          format: date-time
+          example: "2025-12-01T10:00:00Z"
+
+    AttendanceCriteria:
+      type: object
+      properties:
+        memberId:
+          type: integer
+        status:
+          type: string
+          enum: [PRESENT, ABSENT, EXCUSED]
+        dateFrom:
+          type: string
+          format: date
+        dateTo:
+          type: string
+          format: date
+
+    EventDTO:
+      type: object
+      required:
+        - name
+        - date
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 789
+        name:
+          type: string
+          example: "Annual General Meeting"
+        location:
+          type: string
+          example: "Main Hall"
+        date:
+          type: string
+          format: date-time
+          example: "2025-12-15T18:00:00Z"
+        description:
+          type: string
+          example: "Year-end review and planning"
+        createdDate:
+          type: string
+          format: date-time
+          example: "2025-11-20T09:00:00Z"
+
+    EventCriteria:
+      type: object
+      properties:
+        name:
+          type: string
+        dateFrom:
+          type: string
+          format: date-time
+        dateTo:
+          type: string
+          format: date-time
+
+    SummaryDTO:
+      type: object
+      required:
+        - eventId
+        - content
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 321
+        eventId:
+          type: integer
+          example: 789
+        content:
+          type: string
+          example: "Summary of the event outcomes."
+        createdDate:
+          type: string
+          format: date-time
+          example: "2025-12-16T10:00:00Z"
+
+    SummaryCriteria:
+      type: object
+      properties:
+        eventId:
+          type: integer
+
+    Pageable:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          example: 0
+        pageSize:
+          type: integer
+          example: 20
+        sort:
+          type: array
+          items:
+            $ref: '#/components/schemas/Sort'
+
+    Sort:
+      type: object
+      properties:
+        property:
+          type: string
+          example: "id"
+        direction:
+          type: string
+          enum: [ASC, DESC]
+          example: "DESC"
+
+    Problem:
+      type: object
+      required:
+        - type
+        - title
+        - status
+      properties:
+        type:
+          type: string
+          format: uri
+          example: "https://example.com/problem/invalid-params"
+        title:
+          type: string
+          example: "Invalid parameters"
+        status:
+          type: integer
+          example: 400
+        detail:
+          type: string
+          example: "Request parameters are invalid"
+        instance:
+          type: string
+          format: uri
+          example: "/api/resource/123"
+        violations:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                example: "email"
+              message:
+                type: string
+                example: "must be a valid email address"
+
+  parameters:
+    Page:
+      name: page
+      in: query
+      description: Page number (0-based)
+      schema:
+        type: integer
+        default: 0
+        minimum: 0
+    Size:
+      name: size
+      in: query
+      description: Number of items per page
+      schema:
+        type: integer
+        default: 20
+        minimum: 1
+    Sort:
+      name: sort
+      in: query
+      description: "Sort criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported."
+      schema:
+        type: string
+      example: "id,desc"
+    AttendanceCriteria:
+      name: criteria
+      in: query
+      description: Criteria filter object (via separate query params)
+      schema:
+        $ref: '#/components/schemas/AttendanceCriteria'
+    EventCriteria:
+      name: criteria
+      in: query
+      description: Criteria filter object (via separate query params)
+      schema:
+        $ref: '#/components/schemas/EventCriteria'
+    SummaryCriteria:
+      name: criteria
+      in: query
+      description: Criteria filter object (via separate query params)
+      schema:
+        $ref: '#/components/schemas/SummaryCriteria'
+
+  responses:
+    Unauthorized:
+      description: Unauthorized (invalid or missing credentials)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            unauthorized:
+              value:
+                type: "https://httpstatuses.com/401"
+                title: "Unauthorized"
+                status: 401
+                detail: "Authentication failed or missing"
+    BadRequest:
+      description: Bad request (validation or parameter error)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Conflict:
+      description: Conflict (e.g. duplicate resource)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Internal:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+
