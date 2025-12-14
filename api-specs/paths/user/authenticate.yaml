@@ -21,6 +21,7 @@ get:
         application/problem+json:
           schema:
             $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
-
+  security:
+    - oauth2: [ users ]
 
 

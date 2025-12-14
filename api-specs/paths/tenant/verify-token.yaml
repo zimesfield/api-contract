@@ -36,3 +36,5 @@ get:
       description: Token is valid
     '400':
       $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+  security:
+    - oauth2: []

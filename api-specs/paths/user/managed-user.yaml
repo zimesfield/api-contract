@@ -22,7 +22,8 @@ get:
         application/problem+json:
           schema:
             $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
-
+  security:
+    - oauth2: [ admins, super_admins ]
 delete:
   tags: [Admin]
   summary: delete the "login" User
@@ -47,3 +48,6 @@ delete:
         application/problem+json:
           schema:
             $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+
+  security:
+    - oauth2: [ admins, super_admins ]

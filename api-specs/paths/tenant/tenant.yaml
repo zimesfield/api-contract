@@ -30,7 +30,8 @@ get:
         application/problem+json:
           schema:
             $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
-
+  security:
+    - oauth2: [admins]
 put:
   summary: Update tenant information
   tags:
@@ -61,3 +62,5 @@ put:
         application/problem+json:
           schema:
             $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+  security:
+    - oauth2: [ admins ]

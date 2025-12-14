@@ -14,26 +14,24 @@ servers:
           - https
         default: http
       environment:
-        default: tenant.zimesfield.com    # Local server
+        default: localhost:8082/api    # Local server
         enum:
-          - localhost:8082
-          - tenant.zimesfield.com
-  - url: '{protocol}://{environment}/api'
-    description: Production server
-    variables:
-      protocol:
-        enum:
-          - http
-          - https
-        default: http
-      environment:
-        default: l.zimesfield.com    # Local server
-        enum:
-          - localhost:9080
-          - keycloak.zimesfield.com
+          - localhost:8082/api
+          - tenant.zimesfield.com/api
+tags:
+  - name: Register
+    description: Registration for user
+  - name: Tenant
+    description: Tenant management
+  - name: Authenticate
+    description: Authenticate user
+  - name: Account
+    description: User account
+  - name: Admin
+    description: Operations about user
+
 security:
-  - oauth: [ tenant, email, profile ]
-  - openId: [ tenant, email, profile ]
+  - oauth: [ admins,super_admins,finance,secretaries,users ]
 
 paths:
   /tenants/register:
@@ -47,6 +45,32 @@ paths:
 
   /tenants/verify/{token}:
     $ref: './paths/tenant/verify-token.yaml'
+
+  /users/login:
+    $ref: './paths/user/login.yaml'
+  /api/admin/users/{login}:
+    $ref: './paths/user/managed-user.yaml'
+
+  /users/activate:
+    $ref: './paths/user/activate.yaml'
+
+  /users/authenticated:
+    $ref: './paths/user/authenticate.yaml'
+
+  /users/account:
+    $ref: './paths/user/account.yaml'
+
+  /users/register:
+    $ref: './paths/user/register.yaml'
+
+  /users/account/change-password:
+    $ref: './paths/user/change-password.yaml'
+
+  /users/account/reset-password/init:
+    $ref: './paths/user/reset-password-init.yaml'
+
+  /users/account/reset-password/finish:
+    $ref: './paths/user/reset-password-finished.yaml'
 
 components:
   securitySchemes:

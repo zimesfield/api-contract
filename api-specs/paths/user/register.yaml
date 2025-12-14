@@ -22,4 +22,12 @@ post:
         application/problem+json:
           schema:
             $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+    404:
+      description: Resources Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
 
+  security:
+    - oauth2: []

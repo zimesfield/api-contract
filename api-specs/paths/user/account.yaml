@@ -21,7 +21,8 @@ get:
         application/problem+json:
           schema:
             $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
-
+  security:
+    - oauth2: [ users ]
 post:
   tags: [Admin]
   summary: Create new account information
@@ -52,3 +53,5 @@ post:
         application/problem+json:
           schema:
             $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+  security:
+    - oauth2: [ admins, secretaries, super_admins]

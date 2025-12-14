@@ -25,3 +25,5 @@ put:
     '422':
       $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
 
+  security:
+    - oauth2: [ admins ]

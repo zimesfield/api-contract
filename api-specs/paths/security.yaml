@@ -7,9 +7,11 @@ zimesfield:
         authorizationUrl: http://localhost:9080/realms/zimesfield/protocol/openid-connect/auth
         tokenUrl: http://localhost:9080/realms/zimesfield/protocol/openid-connect/token
         scopes:
-          openid: Zimesfeld specific claims
-          email: Email claims
-          profile: Profile claims
+          admins: Admin access
+          super_admins: Super admin access
+          finance: Finance approval access
+          secretaries: Minutes & attendance access
+          users: Standard user access
   openId:
     type: openIdConnect
     description: OpenID Connect authentication with KeyCloak
