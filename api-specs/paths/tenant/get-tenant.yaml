@@ -1,15 +1,14 @@
-getTenant:
-  get:
-    summary: Retrieves tenant information
-    tags:
-      - Tenant
-    operationId: getTenantInformation
-    parameters:
-      - name: uuid
-        required: true
-        in: path
-        schema:
-          type: string
+get:
+  summary: Retrieves tenant information
+  tags:
+    - Tenant
+  operationId: getTenantInformation
+  parameters:
+    - name: uuid
+      required: true
+      in: path
+      schema:
+        type: string
 
   responses:
     '200':
@@ -23,5 +22,5 @@ getTenant:
       content:
         application/problem+json:
           schema:
-            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+              $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
 

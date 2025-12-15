@@ -2,6 +2,7 @@ get:
   tags: [Admin]
   summary: get the "login" user
   operationId: getUser
+
   parameters:
     - name: login
       in: path

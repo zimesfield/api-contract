@@ -1,7 +1,7 @@
 post:
   summary: Register a new tenant
-  tags: [Register]
-  operationId: register
+  tags: [Tenant]
+  operationId: createTenant
   requestBody:
     required: true
     content:

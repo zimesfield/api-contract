@@ -1,13 +1,15 @@
 post:
-  tags: [Register]
+  tags: [User]
   summary: Managed User Registration
-  operationId: registerAccount
+  operationId: registerUser
+  parameters:
+    - $ref: '../../common/components/schemas.yaml#/components/parameters/TenantHeader'
   requestBody:
-    description: register the user
+    description: register user to tenant
     content:
       application/json:
         schema:
-          $ref: '../../common/components/user/schema.yaml#/RegistrationRequest'
+          $ref: '../../common/components/user/schema.yaml#/UserRegistrationRequest'
     required: true
   responses:
     200:
@@ -15,7 +17,7 @@ post:
       content:
         application/json:
           schema:
-            $ref: '../../common/components/user/schema.yaml#/RegistrationResponse'
+            $ref: '../../common/components/user/schema.yaml#/UserRegistrationResponse'
     400:
       description: Invalid information supplied
       content:

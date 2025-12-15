@@ -19,10 +19,10 @@ servers:
           - localhost:8082/api
           - tenant.zimesfield.com/api
 tags:
-  - name: Register
-    description: Registration for user
   - name: Tenant
     description: Tenant management
+  - name: User
+    description: Registration for user
   - name: Authenticate
     description: Authenticate user
   - name: Account
@@ -46,9 +46,9 @@ paths:
   /tenants/verify/{token}:
     $ref: './paths/tenant/verify-token.yaml'
 
-  /users/login:
+  /{tenantId}/users/login:
     $ref: './paths/user/login.yaml'
-  /api/admin/users/{login}:
+  /admin/users/{login}:
     $ref: './paths/user/managed-user.yaml'
 
   /users/activate:

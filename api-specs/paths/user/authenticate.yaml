@@ -2,6 +2,8 @@ get:
   tags: [Authenticate]
   summary: check if the user is authenticated, and return its login.
   operationId: isAuthenticated
+  parameters:
+    - $ref: '../../common/components/schemas.yaml#/components/parameters/TenantHeader'
   responses:
     200:
       description: successful operation

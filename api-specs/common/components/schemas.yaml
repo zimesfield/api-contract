@@ -5,6 +5,14 @@ info:
   description: REST API for individual and group messaging using Spring Boot
 
 components:
+  parameters:
+    TenantHeader:
+      name: X-Tenant-ID
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Tenant identifier
   responses:
     Problem:
       description: error occurred - see status code and problem object for more information.

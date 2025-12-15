@@ -92,7 +92,7 @@ AdminRegistrationRequest:
       userStatus:
         $ref: '../schemas.yaml#/components/schemas/UserStatusEnum'
 
-RegistrationRequest:
+UserRegistrationRequest:
   type: object
   required:
     - login
@@ -107,13 +107,13 @@ RegistrationRequest:
   properties:
     login:
       type: string
-      example: omens
+      example: zimesfield
     firstName:
       type: string
-      example: Omens
+      example: Zimes
     lastName:
       type: string
-      example: Odinaka
+      example: Field
     email:
       type: string
       example: test@test
@@ -132,21 +132,24 @@ RegistrationRequest:
     monthOfBirth:
         $ref: "../schemas.yaml#/components/schemas/MonthEnum"
 
-RegistrationResponse:
+UserRegistrationResponse:
   type: object
   properties:
     uuid:
       type: string
       format: base64
+    tenantId:
+      type: string
+      example: "2b5901be-9f28-4fa4-b565-706cbbc699c5"
     login:
       type: string
-      example: omens
+      example: zimesfield
     firstName:
       type: string
-      example: Omens
+      example: Zimes
     lastName:
       type: string
-      example: Odinaka
+      example: Field
     email:
       type: string
       example: test@test
