@@ -14,10 +14,10 @@ servers:
           - https
         default: http
       environment:
-        default: localhost:8082/api    # Local server
+        default: localhost:8082    # Local server
         enum:
-          - localhost:8082/api
-          - tenant.zimesfield.com/api
+          - localhost:8082
+          - tenant.zimesfield.com
 tags:
   - name: Tenant
     description: Tenant management
