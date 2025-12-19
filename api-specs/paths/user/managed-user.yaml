@@ -2,8 +2,8 @@ get:
   tags: [Admin]
   summary: get the "login" user
   operationId: getUser
-
   parameters:
+    - $ref: '../../common/components/schemas.yaml#/components/parameters/TenantHeader'
     - name: login
       in: path
       description: the login of the user to find

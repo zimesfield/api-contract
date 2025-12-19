@@ -19,8 +19,8 @@ servers:
           - localhost:8082
           - tenant.zimesfield.com
 tags:
-  - name: Tenant
-    description: Tenant management
+  - name: Register
+    description: Register management
   - name: User
     description: Registration for user
   - name: Authenticate
