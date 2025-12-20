@@ -1,5 +1,5 @@
 post:
-  tags: [Register]
+  tags: [User]
   summary: Managed User Registration
   operationId: registerUser
   parameters:
