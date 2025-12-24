@@ -49,7 +49,7 @@ TenantStatus:
 
 TenantRequestStatus:
   type: string
-  enum: [ PENDING, ACTIVATED, EXPIRED ]
+  enum: [ PENDING, PROCESSED, EXPIRED ]
   example: PENDING
 
 Tenant:
