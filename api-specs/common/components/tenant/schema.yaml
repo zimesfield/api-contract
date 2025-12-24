@@ -33,6 +33,15 @@ TenantResponse:
     status:
       $ref: "#/TenantStatus"
 
+CreateTenantResponse:
+  type: object
+  properties:
+    name:
+      type: string
+      example: "Zimesfied limited"
+    status:
+      $ref: "#/TenantStatus"
+
 TenantStatus:
   type: string
   enum: [ PENDING, ACTIVE, SUSPENDED ]

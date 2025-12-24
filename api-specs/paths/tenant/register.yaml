@@ -14,7 +14,7 @@ post:
       content:
         application/json:
           schema:
-            $ref: '../../common/components/tenant/schema.yaml#/TenantResponse'
+            $ref: '../../common/components/tenant/schema.yaml#/CreateTenantResponse'
     400:
       description: Invalid Information Supplied
       content:
