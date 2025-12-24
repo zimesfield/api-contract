@@ -40,11 +40,16 @@ CreateTenantResponse:
       type: string
       example: "Zimesfied limited"
     status:
-      $ref: "#/TenantStatus"
+      $ref: "#/TenantRequestStatus"
 
 TenantStatus:
   type: string
-  enum: [ PENDING, ACTIVE, SUSPENDED ]
+  enum: [ PENDING, ACTIVATED, SUSPENDED ]
+  example: PENDING
+
+TenantRequestStatus:
+  type: string
+  enum: [ PENDING, ACTIVATED, EXPIRED ]
   example: PENDING
 
 Tenant:
