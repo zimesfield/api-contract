@@ -1,21 +1,21 @@
-post:
-  tags: [Authenticate]
-  summary: Authenticate a user and return a JWT token
-  operationId: login
-  requestBody:
-    description: Login credentials
-    required: true
-    content:
-      application/json:
-        schema:
-          $ref: '../../common/components/schemas.yaml#/components/schemas/LoginRequest'
+get:
+  tags: [ Authenticate ]
+  summary: Get user information for authentication
+  operationId: userInfor
+  parameters:
+    - name: email
+      in: query
+      description: 'The login email'
+      required: true
+      schema:
+        type: string
   responses:
     200:
       description: Login successful
       content:
         application/json:
           schema:
-            $ref: '../../common/components/schemas.yaml#/components/schemas/JwtToken'
+            $ref: '../../common/components/schemas.yaml#/components/schemas/LoginRequest'
     400:
       description: Invalid credentials
       content:
@@ -30,4 +30,4 @@ post:
             $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
 
   security:
-    - oauth2: []
+    - oauth2: [ ]

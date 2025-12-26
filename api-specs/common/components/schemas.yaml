@@ -81,14 +81,14 @@ components:
             It may or may not yield further information if dereferenced.
     LoginRequest:
       type: object
-      required: [ username, password ]
+      required: [ email, password ]
       properties:
-        username:
+        email:
           type: string
-          example: admin
+          example: test@zimesfield.com
         password:
           type: string
-          example: admin
+          example: admin123
         rememberMe:
           type: boolean
           default: false

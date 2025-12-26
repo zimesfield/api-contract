@@ -1,0 +1,29 @@
+get:
+  tags: [Authentication]
+  summary: check if the user is authenticated, and return its login.
+  operationId: isAuthenticated
+  parameters:
+    - $ref: '../../common/components/schemas.yaml#/components/parameters/TenantHeader'
+  responses:
+    200:
+      description: successful operation
+      content:
+        application/json:
+          schema:
+            type: string
+    400:
+      description: Invalid username supplied
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+    404:
+      description: User not found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+  security:
+    - oauth2: [ users ]
+
+

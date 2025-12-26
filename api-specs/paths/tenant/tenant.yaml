@@ -5,12 +5,11 @@ get:
   operationId: getTenantInformation
   parameters:
     - $ref: '../../common/components/schemas.yaml#/components/parameters/TenantHeader'
-    - name: uuid
+    - name: tenantId
       required: true
-      in: path
+      in: query
       schema:
         type: string
-
   responses:
     200:
       description: Company information is valid
@@ -39,9 +38,9 @@ put:
     - Tenant
   operationId: updateTenantInformation
   parameters:
-    - name: uuid
+    - name: tenantId
       required: true
-      in: path
+      in: query
       schema:
         type: string
   requestBody:

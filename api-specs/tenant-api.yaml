@@ -19,14 +19,14 @@ servers:
           - localhost:8082
           - tenant.zimesfield.com
 tags:
-  - name: Register
-    description: Register management
+  - name: Tenant
+    description: Tenant management
   - name: User
-    description: Registration for user
+    description: User management
   - name: Authenticate
-    description: Authenticate user
+    description: Authentication Management
   - name: Account
-    description: User account
+    description: Account Management
   - name: Admin
     description: Operations about user
 
@@ -43,7 +43,7 @@ paths:
   /tenants/{uuid}/email:
     $ref: './paths/tenant/update-email.yaml'
 
-  /tenants/verify/{token}:
+  /tenants/verify:
     $ref: './paths/tenant/verify-token.yaml'
 
   /admin/users/{login}:
@@ -53,11 +53,14 @@ paths:
   /activate:
     $ref: './paths/user/activate.yaml'
 
-  /api/authenticate:
-    $ref: './paths/user/login.yaml'
+  /auth:
+    $ref: './paths/user/authenticate-info.yaml'
 
-  /authenticated:
+  /auth/validate:
     $ref: './paths/user/authenticate.yaml'
+
+#  /auth/authenticated:
+#    $ref: './paths/user/is-authenticate.yaml'
 
   /account:
     $ref: './paths/user/account.yaml'

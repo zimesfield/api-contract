@@ -1,7 +1,7 @@
 post:
   summary: Verify registration token sent via email
   tags:
-    - Token
+    - TenantVerification
   operationId: submitToken
   requestBody:
     required: true
@@ -17,20 +17,14 @@ post:
 get:
   summary: Verify registration token sent via click
   tags:
-    - Token
+    - TenantVerification
   operationId: verifyToken
   parameters:
     - name: token
       required: true
-      in: path
+      in: query
       schema:
         type: string
-#  requestBody:
-#    required: true
-#    content:
-#      application/json:
-#        schema:
-#          $ref: '../../common/components/tenant/schema.yaml#/TokenVerificationRequest'
   responses:
     '200':
       description: Token is valid
