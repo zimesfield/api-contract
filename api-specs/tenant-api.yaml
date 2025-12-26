@@ -46,30 +46,32 @@ paths:
   /tenants/verify/{token}:
     $ref: './paths/tenant/verify-token.yaml'
 
-  /{tenantId}/users/login:
-    $ref: './paths/user/login.yaml'
   /admin/users/{login}:
     $ref: './paths/user/managed-user.yaml'
 
-  /users/activate:
+
+  /activate:
     $ref: './paths/user/activate.yaml'
 
-  /users/authenticated:
+  /api/authenticate:
+    $ref: './paths/user/login.yaml'
+
+  /authenticated:
     $ref: './paths/user/authenticate.yaml'
 
-  /users/account:
+  /account:
     $ref: './paths/user/account.yaml'
 
-  /users/register:
+  /register:
     $ref: './paths/user/register.yaml'
 
-  /users/account/change-password:
+  /account/change-password:
     $ref: './paths/user/change-password.yaml'
 
-  /users/account/reset-password/init:
+  /account/reset-password/init:
     $ref: './paths/user/reset-password-init.yaml'
 
-  /users/account/reset-password/finish:
+  /account/reset-password/finish:
     $ref: './paths/user/reset-password-finished.yaml'
 
 components:

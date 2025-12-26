@@ -2,8 +2,6 @@ post:
   tags: [Authenticate]
   summary: Authenticate a user and return a JWT token
   operationId: login
-  parameters:
-    - $ref: '../../common/components/schemas.yaml#/components/parameters/TenantHeader'
   requestBody:
     description: Login credentials
     required: true
