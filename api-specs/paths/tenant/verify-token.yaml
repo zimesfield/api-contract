@@ -1,7 +1,7 @@
 post:
   summary: Verify registration token sent via email
   tags:
-    - TenantVerification
+    - Registration
   operationId: submitToken
   requestBody:
     required: true
@@ -17,7 +17,7 @@ post:
 get:
   summary: Verify registration token sent via click
   tags:
-    - TenantVerification
+    - Registration
   operationId: verifyToken
   parameters:
     - name: token
