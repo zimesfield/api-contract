@@ -1,3 +1,24 @@
+UserInfo:
+  type: object
+  properties:
+    email:
+      type: string
+      example: test@zimesfield.com
+    firstName:
+      type: string
+      example: admin
+    lastName:
+      type: string
+      example: admin
+    phone:
+      type: string
+      example: 2370123456789
+    gender:
+      $ref: "../schemas.yaml#/components/schemas/GenderEnum"
+    authorities:
+      type: array
+      items:
+        type: string
 UserResponse:
   type: object
   properties:

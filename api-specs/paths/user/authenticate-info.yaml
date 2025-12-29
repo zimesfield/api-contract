@@ -15,7 +15,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../../common/components/schemas.yaml#/components/schemas/LoginRequest'
+            $ref: '../../common/components/user/schema.yaml#/UserInfo'
     400:
       description: Invalid credentials
       content:
