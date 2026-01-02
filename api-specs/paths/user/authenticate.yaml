@@ -15,7 +15,7 @@ post:
       content:
         application/json:
           schema:
-            $ref: '../../common/components/schemas.yaml#/components/schemas/JwtToken'
+            $ref: '../../common/components/schemas.yaml#/components/schemas/AuthValidationResponse'
     400:
       description: Invalid credentials
       content:
