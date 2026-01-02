@@ -41,7 +41,7 @@ security:
   - openId: [ user, email, profile ]
 
 paths:
-  /auth/authenticate:
+  /internal/auth/authenticate:
     $ref: './paths/user/authenticate.yaml'
   /api/admin/users/{login}:
     $ref: './paths/user/managed-user.yaml'

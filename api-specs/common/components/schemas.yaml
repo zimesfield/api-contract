@@ -92,6 +92,15 @@ components:
         rememberMe:
           type: boolean
           default: false
+    AuthValidationResponse:
+      type: object
+      properties:
+        tenantId:
+          type: string
+        email:
+          type: string
+        roles:
+          type: array
     JwtToken:
       type: object
       properties:
