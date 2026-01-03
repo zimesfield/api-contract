@@ -159,9 +159,6 @@ UserRegistrationRequest:
 UserRegistrationResponse:
   type: object
   properties:
-    uuid:
-      type: string
-      format: base64
     tenantId:
       type: string
       example: "2b5901be-9f28-4fa4-b565-706cbbc699c5"

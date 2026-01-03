@@ -29,7 +29,7 @@ TenantResponse:
       example: "tenant_001xyz"
     name:
       type: string
-      example: "Zimesfied limited"
+      example: "Zimesfield limited"
     status:
       $ref: "#/TenantStatus"
 
@@ -38,7 +38,7 @@ CreateTenantResponse:
   properties:
     name:
       type: string
-      example: "Zimesfied limited"
+      example: "Zimesfield limited"
     status:
       $ref: "#/TenantRequestStatus"
 
@@ -76,8 +76,6 @@ Tenant:
       type: string
       format: instant
       example: "2025-06-04T14:00:00+01:00"
-    address:
-      $ref: '../schemas.yaml#/components/schemas/Address'
 
 TokenVerificationRequest:
   type: object
