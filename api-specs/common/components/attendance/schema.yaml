@@ -102,6 +102,18 @@ AttendanceResponse:
       format: date-time
       description: Last modification timestamp
 
+PagedAnnouncementResponse:
+  type: object
+  properties:
+    type: object
+    properties:
+      content:
+        type: array
+        items:
+          $ref: '#/AttendanceResponse'
+      pageable:
+        $ref: '#/PageMetadata'
+
 PageMetadata:
   type: object
   properties:

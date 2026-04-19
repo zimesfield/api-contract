@@ -50,17 +50,3 @@ components:
             write:attendance: Create and modify attendance records
             checkin:attendance: Check in users
             checkout:attendance: Check out users
-
-  schemas:
-    CheckInRequest:
-      $ref: 'common/components/attendance/schema.yaml#/CheckInRequest'
-    CheckOutRequest:
-      $ref: 'common/components/attendance/schema.yaml#/CheckOutRequest'
-    UpdateAttendanceStatusRequest:
-      $ref: 'common/components/attendance/schema.yaml#/UpdateAttendanceStatusRequest'
-    AttendanceResponse:
-      $ref: 'common/components/attendance/schema.yaml#/AttendanceResponse'
-    PageMetadata:
-      $ref: 'common/components/attendance/schema.yaml#/PageMetadata'
-    ErrorResponse:
-      $ref: 'common/components/attendance/schema.yaml#/ErrorResponse'

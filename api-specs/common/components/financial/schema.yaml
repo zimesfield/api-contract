@@ -202,6 +202,18 @@ FinancialTransactionStatus:
   enum: [PENDING, VERIFIED, REVERSED, CANCELLED]
   description: Transaction status
 
+PagedFinancialTransactionResponse:
+  type: object
+  properties:
+    type: object
+    properties:
+      content:
+        type: array
+        items:
+          $ref: '#/FinancialTransactionResponse'
+      pageable:
+        $ref: '#/PageMetadata'
+
 PageMetadata:
   type: object
   properties:

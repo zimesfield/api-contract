@@ -53,14 +53,7 @@ get:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              content:
-                type: array
-                items:
-                  $ref: '../../common/components/attendance/schema.yaml#/AttendanceResponse'
-              pageable:
-                $ref: '../../common/components/attendance/schema.yaml#/PageMetadata'
+            $ref: '../../common/components/attendance/schema.yaml#/PagedAttendanceResponse'
     '401':
       description: Unauthorized
     '500':
