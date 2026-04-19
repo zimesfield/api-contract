@@ -102,7 +102,7 @@ AttendanceResponse:
       format: date-time
       description: Last modification timestamp
 
-PagedAnnouncementResponse:
+PagedAttendanceResponse:
   type: object
   properties:
     content:

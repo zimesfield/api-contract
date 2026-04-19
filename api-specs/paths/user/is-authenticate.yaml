@@ -1,5 +1,5 @@
 get:
-  tags: [Authentication]
+  tags: [Authenticate]
   summary: check if the user is authenticated, and return its login.
   operationId: isAuthenticated
   parameters:
