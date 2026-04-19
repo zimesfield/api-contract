@@ -1,0 +1,49 @@
+post:
+  summary: Check out a user
+  tags: [Attendance]
+  operationId: checkOut
+  parameters:
+    - name: X-Tenant-ID
+      in: header
+      description: Tenant ID
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../common/components/attendance/schema.yaml#/CheckOutRequest'
+  responses:
+    '200':
+      description: User checked out successfully
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/attendance/schema.yaml#/AttendanceResponse'
+    '400':
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/attendance/schema.yaml#/ErrorResponse'
+    '404':
+      description: User not checked in or attendance record not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/attendance/schema.yaml#/ErrorResponse'
+    '409':
+      description: User already checked out
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/attendance/schema.yaml#/ErrorResponse'
+    '401':
+      description: Unauthorized
+    '500':
+      description: Internal server error
+
+  security:
+    - oauth2: []

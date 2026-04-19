@@ -1,0 +1,39 @@
+post:
+  summary: Record a new financial transaction
+  tags: [Financial]
+  operationId: recordTransaction
+  parameters:
+    - name: X-Tenant-ID
+      in: header
+      description: Tenant ID
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../common/components/financial/schema.yaml#/RecordFinancialTransactionRequest'
+  responses:
+    '201':
+      description: Financial transaction recorded successfully
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/financial/schema.yaml#/FinancialTransactionResponse'
+    '400':
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/financial/schema.yaml#/ErrorResponse'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '500':
+      description: Internal server error
+
+  security:
+    - oauth2: []

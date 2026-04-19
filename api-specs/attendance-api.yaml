@@ -1,0 +1,66 @@
+openapi: 3.0.3
+info:
+  title: Attendance API
+  description: REST API for managing attendance records in the Zimesfield platform
+  version: 1.0.0
+  contact:
+    name: Zimesfield Team
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+
+servers:
+  - url: 'http://localhost:8082/api'
+    description: Local development server
+  - url: 'https://api.zimesfield.com/api'
+    description: Production server
+
+tags:
+  - name: Attendance
+    description: Attendance management operations
+
+security:
+  - oauth2: []
+
+paths:
+  /attendance/checkin:
+    $ref: './paths/attendance/checkin.yaml'
+
+  /attendance/checkout:
+    $ref: './paths/attendance/checkout.yaml'
+
+  /attendance/{attendanceId}:
+    $ref: './paths/attendance/get-update-attendance.yaml'
+
+  /attendance/user/{userId}:
+    $ref: './paths/attendance/attendance-by-user.yaml'
+
+  /attendance/status/{status}:
+    $ref: './paths/attendance/attendance-by-status.yaml'
+
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://api.zimesfield.com/oauth/authorize
+          scopes:
+            read:attendance: Read attendance records
+            write:attendance: Create and modify attendance records
+            checkin:attendance: Check in users
+            checkout:attendance: Check out users
+
+  schemas:
+    CheckInRequest:
+      $ref: 'common/components/attendance/schema.yaml#/CheckInRequest'
+    CheckOutRequest:
+      $ref: 'common/components/attendance/schema.yaml#/CheckOutRequest'
+    UpdateAttendanceStatusRequest:
+      $ref: 'common/components/attendance/schema.yaml#/UpdateAttendanceStatusRequest'
+    AttendanceResponse:
+      $ref: 'common/components/attendance/schema.yaml#/AttendanceResponse'
+    PageMetadata:
+      $ref: 'common/components/attendance/schema.yaml#/PageMetadata'
+    ErrorResponse:
+      $ref: 'common/components/attendance/schema.yaml#/ErrorResponse'

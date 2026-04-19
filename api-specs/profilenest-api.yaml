@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: ProfileNest API
-  description: REST API for managing user profiles and announcements in the Zimesfield platform
+  description: REST API for managing user profiles, announcements, financial transactions, and attendance records in the Zimesfield platform
   version: 1.0.0
   contact:
     name: Zimesfield Team
@@ -30,8 +30,6 @@ servers:
           - api.staging.profilenest.com # Staging server
 
 tags:
-  - name: Announcements
-    description: Announcement management operations
   - name: Register
     description: Registration for user
   - name: Authenticate
@@ -40,6 +38,12 @@ tags:
     description: User account
   - name: Admin
     description: Operations about user
+  - name: Announcements
+    description: Announcement management operations
+  - name: Financial
+    description: Financial transaction management operations
+  - name: Attendance
+    description: Attendance management operations
 
 security:
   - oauth2: []
@@ -99,6 +103,44 @@ paths:
   /api/account/reset-password/finish:
     $ref: './paths/user/reset-password-finished.yaml'
 
+  # Financial endpoints
+  /financial/transactions:
+    $ref: './paths/financial/record-transaction.yaml'
+
+  /financial/transactions/{transactionId}:
+    $ref: './paths/financial/get-transaction.yaml'
+
+  /financial/transactions/{transactionId}/verify:
+    $ref: './paths/financial/verify-transaction.yaml'
+
+  /financial/transactions/{transactionId}/reverse:
+    $ref: './paths/financial/reverse-transaction.yaml'
+
+  /financial/transactions/contributor/{contributorId}:
+    $ref: './paths/financial/transactions-by-contributor.yaml'
+
+  /financial/transactions/category/{category}:
+    $ref: './paths/financial/transactions-by-category.yaml'
+
+  /financial/transactions/type/{transactionType}:
+    $ref: './paths/financial/transactions-by-type.yaml'
+
+  # Attendance endpoints
+  /attendance/checkin:
+    $ref: './paths/attendance/checkin.yaml'
+
+  /attendance/checkout:
+    $ref: './paths/attendance/checkout.yaml'
+
+  /attendance/{attendanceId}:
+    $ref: './paths/attendance/get-update-attendance.yaml'
+
+  /attendance/user/{userId}:
+    $ref: './paths/attendance/attendance-by-user.yaml'
+
+  /attendance/status/{status}:
+    $ref: './paths/attendance/attendance-by-status.yaml'
+
 components:
   securitySchemes:
     oauth2:
@@ -110,6 +152,14 @@ components:
             read:announcements: Read announcements
             write:announcements: Create and modify announcements
             delete:announcements: Delete announcements
+            read:financial: Read financial transactions
+            write:financial: Create and modify financial transactions
+            verify:financial: Verify financial transactions
+            reverse:financial: Reverse financial transactions
+            read:attendance: Read attendance records
+            write:attendance: Create and modify attendance records
+            checkin:attendance: Check in users
+            checkout:attendance: Check out users
     oauth:
       type: oauth2
       description: OAuth2 with Keycloak
@@ -124,21 +174,3 @@ components:
     openId:
       type: openIdConnect
       openIdConnectUrl: http://localhost:9080/realms/jhipster/.well-known/openid-configuration
-
-  schemas:
-    # Announcement schemas
-    CreateAnnouncementRequest:
-      $ref: 'common/components/announcement/schema.yaml#/CreateAnnouncementRequest'
-    UpdateAnnouncementRequest:
-      $ref: 'common/components/announcement/schema.yaml#/UpdateAnnouncementRequest'
-    PublishAnnouncementRequest:
-      $ref: 'common/components/announcement/schema.yaml#/PublishAnnouncementRequest'
-    AnnouncementResponse:
-      $ref: 'common/components/announcement/schema.yaml#/AnnouncementResponse'
-    AnnouncementStatus:
-      $ref: 'common/components/announcement/schema.yaml#/AnnouncementStatus'
-    PageMetadata:
-      $ref: 'common/components/announcement/schema.yaml#/PageMetadata'
-    ErrorResponse:
-      $ref: 'common/components/announcement/schema.yaml#/ErrorResponse'
-

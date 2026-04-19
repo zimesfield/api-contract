@@ -1,0 +1,74 @@
+openapi: 3.0.3
+info:
+  title: Financial API
+  description: REST API for managing financial transactions and recordings in the Zimesfield platform
+  version: 1.0.0
+  contact:
+    name: Zimesfield Team
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+
+servers:
+  - url: 'http://localhost:8082/api'
+    description: Local development server
+  - url: 'https://api.zimesfield.com/api'
+    description: Production server
+
+tags:
+  - name: Financial
+    description: Financial transaction management operations
+
+security:
+  - oauth2: []
+
+paths:
+  /financial/transactions:
+    $ref: './paths/financial/record-transaction.yaml'
+
+  /financial/transactions/{transactionId}:
+    $ref: './paths/financial/get-transaction.yaml'
+
+  /financial/transactions/{transactionId}/verify:
+    $ref: './paths/financial/verify-transaction.yaml'
+
+  /financial/transactions/{transactionId}/reverse:
+    $ref: './paths/financial/reverse-transaction.yaml'
+
+  /financial/transactions/contributor/{contributorId}:
+    $ref: './paths/financial/transactions-by-contributor.yaml'
+
+  /financial/transactions/category/{category}:
+    $ref: './paths/financial/transactions-by-category.yaml'
+
+  /financial/transactions/type/{transactionType}:
+    $ref: './paths/financial/transactions-by-type.yaml'
+
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://api.zimesfield.com/oauth/authorize
+          scopes:
+            read:financial: Read financial transactions
+            write:financial: Create and modify financial transactions
+            verify:financial: Verify financial transactions
+            reverse:financial: Reverse financial transactions
+
+  schemas:
+    RecordFinancialTransactionRequest:
+      $ref: 'common/components/financial/schema.yaml#/RecordFinancialTransactionRequest'
+    VerifyFinancialTransactionRequest:
+      $ref: 'common/components/financial/schema.yaml#/VerifyFinancialTransactionRequest'
+    ReverseFinancialTransactionRequest:
+      $ref: 'common/components/financial/schema.yaml#/ReverseFinancialTransactionRequest'
+    FinancialTransactionResponse:
+      $ref: 'common/components/financial/schema.yaml#/FinancialTransactionResponse'
+    FinancialTransactionStatus:
+      $ref: 'common/components/financial/schema.yaml#/FinancialTransactionStatus'
+    PageMetadata:
+      $ref: 'common/components/financial/schema.yaml#/PageMetadata'
+    ErrorResponse:
+      $ref: 'common/components/financial/schema.yaml#/ErrorResponse'

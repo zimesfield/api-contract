@@ -1,0 +1,139 @@
+CheckInRequest:
+  type: object
+  required:
+    - userId
+    - location
+  properties:
+    userId:
+      type: string
+      format: uuid
+      description: User ID
+      example: "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+    location:
+      type: string
+      minLength: 1
+      maxLength: 255
+      description: Check-in location
+      example: "Main Office"
+    device:
+      type: string
+      maxLength: 255
+      description: Device used for check-in
+      example: "iPhone 13"
+    notes:
+      type: string
+      maxLength: 1000
+      description: Optional notes
+      example: "Arrived early for meeting"
+
+CheckOutRequest:
+  type: object
+  required:
+    - userId
+  properties:
+    userId:
+      type: string
+      format: uuid
+      description: User ID
+      example: "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+    notes:
+      type: string
+      maxLength: 1000
+      description: Optional checkout notes
+      example: "Left early due to emergency"
+
+UpdateAttendanceStatusRequest:
+  type: object
+  required:
+    - status
+  properties:
+    status:
+      type: string
+      enum: [PRESENT, ABSENT, LATE, EXCUSED]
+      description: New attendance status
+      example: "PRESENT"
+    notes:
+      type: string
+      maxLength: 1000
+      description: Optional notes for status change
+      example: "Approved excused absence"
+
+AttendanceResponse:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+      description: Attendance record ID
+    tenantId:
+      type: string
+      description: Tenant ID
+    userId:
+      type: string
+      format: uuid
+      description: User ID
+    status:
+      type: string
+      enum: [PRESENT, ABSENT, LATE, EXCUSED]
+      description: Attendance status
+    checkInTime:
+      type: string
+      format: date-time
+      description: Check-in timestamp
+    checkOutTime:
+      type: string
+      format: date-time
+      description: Check-out timestamp
+    location:
+      type: string
+      description: Check-in location
+    device:
+      type: string
+      description: Device used
+    notes:
+      type: string
+      description: Additional notes
+    createdAt:
+      type: string
+      format: date-time
+      description: Creation timestamp
+    lastModifiedAt:
+      type: string
+      format: date-time
+      description: Last modification timestamp
+
+PageMetadata:
+  type: object
+  properties:
+    pageNumber:
+      type: integer
+      description: Current page number
+    pageSize:
+      type: integer
+      description: Size of the page
+    totalElements:
+      type: integer
+      description: Total number of elements
+    totalPages:
+      type: integer
+      description: Total number of pages
+
+ErrorResponse:
+  type: object
+  properties:
+    timestamp:
+      type: string
+      format: date-time
+      description: Error timestamp
+    status:
+      type: integer
+      description: HTTP status code
+    error:
+      type: string
+      description: Error type
+    message:
+      type: string
+      description: Error message
+    path:
+      type: string
+      description: Request path

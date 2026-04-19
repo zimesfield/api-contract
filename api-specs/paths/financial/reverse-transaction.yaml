@@ -1,0 +1,56 @@
+post:
+  summary: Reverse/cancel a financial transaction
+  tags: [Financial]
+  operationId: reverseTransaction
+  parameters:
+    - name: X-Tenant-ID
+      in: header
+      description: Tenant ID
+      required: true
+      schema:
+        type: string
+    - name: transactionId
+      in: path
+      description: Transaction ID
+      required: true
+      schema:
+        type: string
+        format: uuid
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../common/components/financial/schema.yaml#/ReverseFinancialTransactionRequest'
+  responses:
+    '200':
+      description: Transaction reversed successfully
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/financial/schema.yaml#/FinancialTransactionResponse'
+    '400':
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/financial/schema.yaml#/ErrorResponse'
+    '404':
+      description: Transaction not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/financial/schema.yaml#/ErrorResponse'
+    '409':
+      description: Transaction cannot be reversed in its current status
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/financial/schema.yaml#/ErrorResponse'
+    '401':
+      description: Unauthorized
+    '500':
+      description: Internal server error
+
+  security:
+    - oauth2: []
