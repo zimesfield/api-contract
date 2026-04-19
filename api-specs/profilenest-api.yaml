@@ -1,0 +1,144 @@
+openapi: 3.0.3
+info:
+  title: ProfileNest API
+  description: REST API for managing user profiles and announcements in the Zimesfield platform
+  version: 1.0.0
+  contact:
+    name: Zimesfield Team
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+
+servers:
+  - url: 'http://localhost:8082/api'
+    description: Local development server
+  - url: 'https://api.profilenext.com/api'
+    description: Production server
+  - url: '{protocol}://{environment}/services/user'
+    variables:
+      protocol:
+        enum:
+          - http
+          - https
+        default: http
+      environment:
+        default: localhost:8081    # Local server
+        enum:
+          - localhost:8081
+          - api.profilenest.com         # Production server
+          - api.dev.profilenest.com     # Development server
+          - api.staging.profilenest.com # Staging server
+
+tags:
+  - name: Announcements
+    description: Announcement management operations
+  - name: Register
+    description: Registration for user
+  - name: Authenticate
+    description: Authenticate user
+  - name: Account
+    description: User account
+  - name: Admin
+    description: Operations about user
+
+security:
+  - oauth2: []
+  - oauth: [ user, email, profile ]
+  - openId: [ user, email, profile ]
+
+paths:
+  # Announcement endpoints
+  /announcements:
+    $ref: 'paths/announcement/create.yaml'
+
+  /announcements/{announcementId}:
+    $ref: 'paths/announcement/get-update.yaml'
+
+  /announcements/{announcementId}/publish:
+    $ref: 'paths/announcement/publish.yaml'
+
+  /announcements/{announcementId}/archive:
+    $ref: 'paths/announcement/archive.yaml'
+
+  /announcements/published:
+    $ref: 'paths/announcement/published.yaml'
+
+  /announcements/pinned:
+    $ref: 'paths/announcement/pinned.yaml'
+
+  /announcements/category/{category}:
+    $ref: 'paths/announcement/category.yaml'
+
+  /announcements/creator/{creatorId}:
+    $ref: 'paths/announcement/creator.yaml'
+
+  # User endpoints
+  /internal/auth/authenticate:
+    $ref: './paths/user/authenticate.yaml'
+  /api/admin/users/{login}:
+    $ref: './paths/user/managed-user.yaml'
+
+  /api/activate:
+    $ref: './paths/user/activate.yaml'
+
+  /api/authenticated:
+    $ref: './paths/user/is-authenticate.yaml'
+
+  /api/account:
+    $ref: './paths/user/account.yaml'
+
+  /api/register:
+    $ref: './paths/user/register.yaml'
+
+  /api/account/change-password:
+    $ref: './paths/user/change-password.yaml'
+
+  /api/account/reset-password/init:
+    $ref: './paths/user/reset-password-init.yaml'
+
+  /api/account/reset-password/finish:
+    $ref: './paths/user/reset-password-finished.yaml'
+
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://api.zimesfield.com/oauth/authorize
+          scopes:
+            read:announcements: Read announcements
+            write:announcements: Create and modify announcements
+            delete:announcements: Delete announcements
+    oauth:
+      type: oauth2
+      description: OAuth2 with Keycloak
+      flows:
+        authorizationCode:
+          authorizationUrl: http://localhost:9080/realms/zimesfield/protocol/openid-connect/auth
+          tokenUrl: http://localhost:9080/realms/zimesfield/protocol/openid-connect/token
+          scopes:
+            openid: Zimesfeld specific claims
+            email: Email claims
+            profile: Profile claims
+    openId:
+      type: openIdConnect
+      openIdConnectUrl: http://localhost:9080/realms/jhipster/.well-known/openid-configuration
+
+  schemas:
+    # Announcement schemas
+    CreateAnnouncementRequest:
+      $ref: 'common/components/announcement/schema.yaml#/CreateAnnouncementRequest'
+    UpdateAnnouncementRequest:
+      $ref: 'common/components/announcement/schema.yaml#/UpdateAnnouncementRequest'
+    PublishAnnouncementRequest:
+      $ref: 'common/components/announcement/schema.yaml#/PublishAnnouncementRequest'
+    AnnouncementResponse:
+      $ref: 'common/components/announcement/schema.yaml#/AnnouncementResponse'
+    AnnouncementStatus:
+      $ref: 'common/components/announcement/schema.yaml#/AnnouncementStatus'
+    PageMetadata:
+      $ref: 'common/components/announcement/schema.yaml#/PageMetadata'
+    ErrorResponse:
+      $ref: 'common/components/announcement/schema.yaml#/ErrorResponse'
+

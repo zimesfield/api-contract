@@ -1,0 +1,94 @@
+get:
+  summary: Get announcement by ID
+  tags: [Announcements]
+  operationId: getAnnouncement
+  parameters:
+    - name: X-Tenant-ID
+      in: header
+      description: Tenant ID
+      required: true
+      schema:
+        type: string
+    - name: announcementId
+      in: path
+      description: Announcement ID
+      required: true
+      schema:
+        type: string
+  responses:
+    '200':
+      description: Announcement retrieved successfully
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/announcement/schema.yaml#/AnnouncementResponse'
+    '404':
+      description: Announcement not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/announcement/schema.yaml#/ErrorResponse'
+    '401':
+      description: Unauthorized
+    '500':
+      description: Internal server error
+
+  security:
+    - oauth2: []
+
+put:
+  summary: Update announcement (draft or scheduled only)
+  tags: [Announcements]
+  operationId: updateAnnouncement
+  parameters:
+    - name: X-Tenant-ID
+      in: header
+      description: Tenant ID
+      required: true
+      schema:
+        type: string
+    - name: announcementId
+      in: path
+      description: Announcement ID
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../common/components/announcement/schema.yaml#/UpdateAnnouncementRequest'
+  responses:
+    '200':
+      description: Announcement updated successfully
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/announcement/schema.yaml#/AnnouncementResponse'
+    '400':
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/announcement/schema.yaml#/ErrorResponse'
+    '404':
+      description: Announcement not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/announcement/schema.yaml#/ErrorResponse'
+    '409':
+      description: Cannot update announcement in its current status
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/announcement/schema.yaml#/ErrorResponse'
+    '401':
+      description: Unauthorized
+    '500':
+      description: Internal server error
+
+  security:
+    - oauth2: []
+

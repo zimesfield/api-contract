@@ -1,0 +1,28 @@
+get:
+  summary: Get pinned announcements for tenant
+  tags: [Announcements]
+  operationId: getPinnedAnnouncements
+  parameters:
+    - name: X-Tenant-ID
+      in: header
+      description: Tenant ID
+      required: true
+      schema:
+        type: string
+  responses:
+    '200':
+      description: Pinned announcements retrieved successfully
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../common/components/announcement/schema.yaml#/AnnouncementResponse'
+    '401':
+      description: Unauthorized
+    '500':
+      description: Internal server error
+
+  security:
+    - oauth2: []
+

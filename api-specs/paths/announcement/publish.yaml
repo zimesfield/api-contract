@@ -1,0 +1,50 @@
+post:
+  summary: Publish announcement
+  tags: [Announcements]
+  operationId: publishAnnouncement
+  parameters:
+    - name: X-Tenant-ID
+      in: header
+      description: Tenant ID
+      required: true
+      schema:
+        type: string
+    - name: announcementId
+      in: path
+      description: Announcement ID
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../common/components/announcement/schema.yaml#/PublishAnnouncementRequest'
+  responses:
+    '200':
+      description: Announcement published successfully
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/announcement/schema.yaml#/AnnouncementResponse'
+    '404':
+      description: Announcement not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/announcement/schema.yaml#/ErrorResponse'
+    '409':
+      description: Cannot publish announcement in its current status
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/announcement/schema.yaml#/ErrorResponse'
+    '401':
+      description: Unauthorized
+    '500':
+      description: Internal server error
+
+  security:
+    - oauth2: []
+
