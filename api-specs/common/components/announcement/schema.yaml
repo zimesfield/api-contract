@@ -129,6 +129,20 @@ AnnouncementResponse:
       format: date-time
       description: Last modification timestamp
 
+PagedAnnouncementResponse:
+  type: object
+  properties:
+    type: object
+    properties:
+      content:
+        type: array
+        items:
+          $ref: '#/AnnouncementResponse'
+      pageable:
+        $ref: '#/PageMetadata'
+
+
+
 AnnouncementStatus:
   type: string
   enum: [DRAFT, SCHEDULED, PUBLISHED, ARCHIVED]

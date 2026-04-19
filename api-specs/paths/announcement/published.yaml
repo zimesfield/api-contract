@@ -32,14 +32,7 @@ get:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              content:
-                type: array
-                items:
-                  $ref: '../../common/components/announcement/schema.yaml#/AnnouncementResponse'
-              pageable:
-                $ref: '../../common/components/announcement/schema.yaml#/PageMetadata'
+            $ref: '../../common/components/announcement/schema.yaml#/PagedAnnouncementResponse'
     '401':
       description: Unauthorized
     '500':

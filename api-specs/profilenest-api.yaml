@@ -30,7 +30,7 @@ servers:
           - api.staging.profilenest.com # Staging server
 
 tags:
-  - name: Register
+  - name: User
     description: Registration for user
   - name: Authenticate
     description: Authenticate user
