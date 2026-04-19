@@ -205,14 +205,12 @@ FinancialTransactionStatus:
 PagedFinancialTransactionResponse:
   type: object
   properties:
-    type: object
-    properties:
-      content:
-        type: array
-        items:
-          $ref: '#/FinancialTransactionResponse'
-      pageable:
-        $ref: '#/PageMetadata'
+    content:
+      type: array
+      items:
+        $ref: '#/FinancialTransactionResponse'
+    pageable:
+      $ref: '#/PageMetadata'
 
 PageMetadata:
   type: object

@@ -105,14 +105,12 @@ AttendanceResponse:
 PagedAnnouncementResponse:
   type: object
   properties:
-    type: object
-    properties:
-      content:
-        type: array
-        items:
-          $ref: '#/AttendanceResponse'
-      pageable:
-        $ref: '#/PageMetadata'
+    content:
+      type: array
+      items:
+        $ref: '#/AttendanceResponse'
+    pageable:
+      $ref: '#/PageMetadata'
 
 PageMetadata:
   type: object
