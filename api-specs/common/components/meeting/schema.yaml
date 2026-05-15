@@ -1,0 +1,352 @@
+CreateMeetingRequest:
+  type: object
+  required:
+    - title
+    - startTime
+    - organizerId
+  properties:
+    title:
+      type: string
+      minLength: 1
+      maxLength: 255
+      description: Meeting title
+      example: "Q2 Planning Meeting"
+    description:
+      type: string
+      maxLength: 2000
+      description: Meeting description
+      example: "Discuss Q2 goals and objectives"
+    startTime:
+      type: string
+      format: date-time
+      description: Meeting start time
+      example: "2026-05-20T14:00:00+01:00"
+    endTime:
+      type: string
+      format: date-time
+      description: Meeting end time
+      example: "2026-05-20T15:00:00+01:00"
+    location:
+      type: string
+      maxLength: 255
+      description: Physical meeting location
+      example: "Conference Room A"
+    meetingLink:
+      type: string
+      format: uri
+      description: Virtual meeting link
+      example: "https://meet.zimesfield.com/meeting/abc123"
+    organizerId:
+      type: string
+      format: uuid
+      description: Meeting organizer user ID
+    participantIds:
+      type: array
+      items:
+        type: string
+        format: uuid
+      description: Initial list of participant user IDs
+    category:
+      type: string
+      description: Meeting category
+      example: "Planning"
+    priority:
+      type: integer
+      minimum: 0
+      maximum: 10
+      description: Priority level (0-10)
+      example: 7
+    recurring:
+      type: boolean
+      description: Whether this is a recurring meeting
+      default: false
+    recurrencePattern:
+      type: string
+      description: Recurrence pattern (e.g., WEEKLY, MONTHLY)
+      example: "WEEKLY"
+
+UpdateMeetingRequest:
+  type: object
+  properties:
+    title:
+      type: string
+      minLength: 1
+      maxLength: 255
+      description: Updated meeting title
+    description:
+      type: string
+      maxLength: 2000
+      description: Updated meeting description
+    startTime:
+      type: string
+      format: date-time
+      description: Updated start time
+    endTime:
+      type: string
+      format: date-time
+      description: Updated end time
+    location:
+      type: string
+      maxLength: 255
+      description: Updated location
+    meetingLink:
+      type: string
+      format: uri
+      description: Updated meeting link
+    category:
+      type: string
+      description: Updated category
+    priority:
+      type: integer
+      minimum: 0
+      maximum: 10
+      description: Updated priority level
+
+EndMeetingRequest:
+  type: object
+  properties:
+    notes:
+      type: string
+      maxLength: 2000
+      description: Meeting notes or summary
+      example: "Discussed Q2 goals, assigned action items"
+    recordingUrl:
+      type: string
+      format: uri
+      description: Meeting recording URL
+      example: "https://recordings.zimesfield.com/meeting/abc123"
+
+CancelMeetingRequest:
+  type: object
+  properties:
+    reason:
+      type: string
+      maxLength: 500
+      description: Cancellation reason
+      example: "Organizer is unavailable"
+    notifyParticipants:
+      type: boolean
+      description: Whether to notify all participants
+      default: true
+
+AddParticipantRequest:
+  type: object
+  required:
+    - participantId
+  properties:
+    participantId:
+      type: string
+      format: uuid
+      description: User ID of participant to add
+    role:
+      type: string
+      enum: [ATTENDEE, PRESENTER, OBSERVER]
+      description: Participant role
+      default: ATTENDEE
+
+UpdateParticipantStatusRequest:
+  type: object
+  required:
+    - status
+  properties:
+    status:
+      type: string
+      enum: [ACCEPTED, DECLINED, TENTATIVE, NO_RESPONSE]
+      description: Participant RSVP status
+
+CreateReminderRequest:
+  type: object
+  required:
+    - minutesBefore
+  properties:
+    minutesBefore:
+      type: integer
+      minimum: 1
+      description: Number of minutes before meeting to send reminder
+      example: 15
+    type:
+      type: string
+      enum: [EMAIL, SMS, IN_APP]
+      description: Reminder notification type
+      default: IN_APP
+
+MeetingResponse:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+      description: Meeting ID
+    tenantId:
+      type: string
+      description: Tenant ID
+    title:
+      type: string
+      description: Meeting title
+    description:
+      type: string
+      description: Meeting description
+    status:
+      type: string
+      enum: [SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED]
+      description: Current status of the meeting
+    startTime:
+      type: string
+      format: date-time
+      description: Meeting start time
+    endTime:
+      type: string
+      format: date-time
+      description: Meeting end time
+    location:
+      type: string
+      description: Physical meeting location
+    meetingLink:
+      type: string
+      format: uri
+      description: Virtual meeting link
+    organizerId:
+      type: string
+      format: uuid
+      description: Meeting organizer user ID
+    category:
+      type: string
+      description: Meeting category
+    priority:
+      type: integer
+      description: Priority level (0-10)
+    participantCount:
+      type: integer
+      description: Number of participants
+    recurring:
+      type: boolean
+      description: Whether this is a recurring meeting
+    recurrencePattern:
+      type: string
+      description: Recurrence pattern
+    notes:
+      type: string
+      description: Meeting notes
+    recordingUrl:
+      type: string
+      format: uri
+      description: Meeting recording URL
+    cancellationReason:
+      type: string
+      description: Reason for cancellation (if cancelled)
+    createdAt:
+      type: string
+      format: date-time
+      description: Creation timestamp
+    updatedAt:
+      type: string
+      format: date-time
+      description: Last update timestamp
+    completedAt:
+      type: string
+      format: date-time
+      description: Completion timestamp
+
+ParticipantResponse:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+      description: Participant ID (User ID)
+    name:
+      type: string
+      description: Participant name
+    email:
+      type: string
+      format: email
+      description: Participant email
+    role:
+      type: string
+      enum: [ATTENDEE, PRESENTER, OBSERVER]
+      description: Participant role
+    status:
+      type: string
+      enum: [ACCEPTED, DECLINED, TENTATIVE, NO_RESPONSE]
+      description: RSVP status
+    joinTime:
+      type: string
+      format: date-time
+      description: When participant joined the meeting
+    leaveTime:
+      type: string
+      format: date-time
+      description: When participant left the meeting
+    duration:
+      type: integer
+      description: Duration in minutes
+    addedAt:
+      type: string
+      format: date-time
+      description: When participant was added to meeting
+
+ReminderResponse:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+      description: Reminder ID
+    meetingId:
+      type: string
+      format: uuid
+      description: Meeting ID
+    minutesBefore:
+      type: integer
+      description: Minutes before meeting
+    type:
+      type: string
+      enum: [EMAIL, SMS, IN_APP]
+      description: Reminder notification type
+    sent:
+      type: boolean
+      description: Whether reminder was sent
+    sentAt:
+      type: string
+      format: date-time
+      description: When reminder was sent
+    createdAt:
+      type: string
+      format: date-time
+      description: Creation timestamp
+
+PageMetadata:
+  type: object
+  properties:
+    pageNumber:
+      type: integer
+      description: Current page number
+    pageSize:
+      type: integer
+      description: Size of the page
+    totalElements:
+      type: integer
+      description: Total number of elements
+    totalPages:
+      type: integer
+      description: Total number of pages
+
+ErrorResponse:
+  type: object
+  properties:
+    timestamp:
+      type: string
+      format: date-time
+      description: Error timestamp
+    status:
+      type: integer
+      description: HTTP status code
+    error:
+      type: string
+      description: Error type
+    message:
+      type: string
+      description: Error message
+    path:
+      type: string
+      description: Request path
