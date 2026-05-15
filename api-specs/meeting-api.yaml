@@ -1,0 +1,18 @@
+openapi: 3.0.3
+info:
+  title: Announcement API
+  description: REST API for managing announcements in the Zimesfield platform
+  version: 1.0.0
+  contact:
+    name: Zimesfield Team
+
+servers:
+  - url: 'http://localhost:8082/api'
+    description: Local development server
+  - url: 'https://api.zimesfield.com/api'
+    description: Production server
+
+tags:
+  - name: Meetings
+    description: Meeting management operations
+paths:
