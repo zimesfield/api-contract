@@ -7,7 +7,7 @@ info:
     name: Zimesfield Team
 
 servers:
-  - url: 'http://localhost:8082/api'
+  - url: 'http://localhost:8083/api'
     description: Local development server
   - url: 'https://api.zimesfield.com/api'
     description: Production server

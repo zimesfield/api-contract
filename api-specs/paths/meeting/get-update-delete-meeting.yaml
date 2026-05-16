@@ -1,0 +1,124 @@
+get:
+  summary: Get meeting by ID
+  tags: [Meetings]
+  operationId: getMeeting
+  parameters:
+    - name: X-Tenant-ID
+      in: header
+      description: Tenant ID
+      required: true
+      schema:
+        type: string
+    - name: meetingId
+      in: path
+      description: Meeting ID
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    '200':
+      description: Meeting retrieved successfully
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/meeting/schema.yaml#/MeetingResponse'
+    '404':
+      description: Meeting not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/meeting/schema.yaml#/ErrorResponse'
+    '401':
+      description: Unauthorized
+    '500':
+      description: Internal server error
+
+put:
+  summary: Update meeting details (SCHEDULED only)
+  tags: [Meetings]
+  operationId: updateMeeting
+  parameters:
+    - name: X-Tenant-ID
+      in: header
+      description: Tenant ID
+      required: true
+      schema:
+        type: string
+    - name: meetingId
+      in: path
+      description: Meeting ID
+      required: true
+      schema:
+        type: string
+        format: uuid
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../common/components/meeting/schema.yaml#/UpdateMeetingRequest'
+  responses:
+    '200':
+      description: Meeting updated successfully
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/meeting/schema.yaml#/MeetingResponse'
+    '400':
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/meeting/schema.yaml#/ErrorResponse'
+    '404':
+      description: Meeting not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/meeting/schema.yaml#/ErrorResponse'
+    '409':
+      description: Cannot update meeting in its current status
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/meeting/schema.yaml#/ErrorResponse'
+    '401':
+      description: Unauthorized
+    '500':
+      description: Internal server error
+
+delete:
+  summary: Delete meeting (SCHEDULED only)
+  tags: [Meetings]
+  operationId: deleteMeeting
+  parameters:
+    - name: X-Tenant-ID
+      in: header
+      description: Tenant ID
+      required: true
+      schema:
+        type: string
+    - name: meetingId
+      in: path
+      description: Meeting ID
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    '204':
+      description: Meeting deleted successfully
+    '404':
+      description: Meeting not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/meeting/schema.yaml#/ErrorResponse'
+    '401':
+      description: Unauthorized
+    '500':
+      description: Internal server error
+
+  security:
+    - oauth2: []
