@@ -10,7 +10,7 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
 
 servers:
-  - url: 'http://localhost:8082/api'
+  - url: 'http://localhost:8083/api'
     description: Local development server
   - url: 'https://api.zimesfield.com/api'
     description: Production server
@@ -56,19 +56,3 @@ components:
             write:financial: Create and modify financial transactions
             verify:financial: Verify financial transactions
             reverse:financial: Reverse financial transactions
-
-  schemas:
-    RecordFinancialTransactionRequest:
-      $ref: 'common/components/financial/schema.yaml#/RecordFinancialTransactionRequest'
-    VerifyFinancialTransactionRequest:
-      $ref: 'common/components/financial/schema.yaml#/VerifyFinancialTransactionRequest'
-    ReverseFinancialTransactionRequest:
-      $ref: 'common/components/financial/schema.yaml#/ReverseFinancialTransactionRequest'
-    FinancialTransactionResponse:
-      $ref: 'common/components/financial/schema.yaml#/FinancialTransactionResponse'
-    FinancialTransactionStatus:
-      $ref: 'common/components/financial/schema.yaml#/FinancialTransactionStatus'
-    PageMetadata:
-      $ref: 'common/components/financial/schema.yaml#/PageMetadata'
-    ErrorResponse:
-      $ref: 'common/components/financial/schema.yaml#/ErrorResponse'

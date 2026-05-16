@@ -1,0 +1,96 @@
+delete:
+  summary: Remove participant from meeting
+  tags: [Meetings]
+  operationId: removeParticipant
+  parameters:
+    - name: X-Tenant-ID
+      in: header
+      description: Tenant ID
+      required: true
+      schema:
+        type: string
+    - name: meetingId
+      in: path
+      description: Meeting ID
+      required: true
+      schema:
+        type: string
+        format: uuid
+    - name: participantId
+      in: path
+      description: Participant ID (User ID)
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    '204':
+      description: Participant removed successfully
+    '404':
+      description: Meeting or participant not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/meeting/schema.yaml#/ErrorResponse'
+    '401':
+      description: Unauthorized
+    '500':
+      description: Internal server error
+
+put:
+  summary: Update participant status
+  tags: [Meetings]
+  operationId: updateParticipantStatus
+  parameters:
+    - name: X-Tenant-ID
+      in: header
+      description: Tenant ID
+      required: true
+      schema:
+        type: string
+    - name: meetingId
+      in: path
+      description: Meeting ID
+      required: true
+      schema:
+        type: string
+        format: uuid
+    - name: participantId
+      in: path
+      description: Participant ID (User ID)
+      required: true
+      schema:
+        type: string
+        format: uuid
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../common/components/meeting/schema.yaml#/UpdateParticipantStatusRequest'
+  responses:
+    '200':
+      description: Participant status updated successfully
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/meeting/schema.yaml#/ParticipantResponse'
+    '400':
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/meeting/schema.yaml#/ErrorResponse'
+    '404':
+      description: Meeting or participant not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/meeting/schema.yaml#/ErrorResponse'
+    '401':
+      description: Unauthorized
+    '500':
+      description: Internal server error
+
+  security:
+    - oauth2: []
