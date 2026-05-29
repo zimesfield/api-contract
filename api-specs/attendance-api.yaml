@@ -10,10 +10,29 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
 
 servers:
-  - url: 'http://localhost:8083/api'
-    description: Local development server
-  - url: 'https://api.zimesfield.com/api'
-    description: Production server
+  - url: '{protocol}://{environment}/{version}/{service}'
+    variables:
+      protocol:
+        enum:
+          - http
+          - https
+        default: http
+      version:
+        enum:
+          - v1
+        default: v1
+      service:
+        enum:
+          - attendance
+        default: attendance
+      environment:
+        default: localhost:8081/api    # Local server
+        enum:
+          - localhost:8081
+          - api.profilenest.com         # Production server
+          - dev.api.profilenest.com     # Development server
+          - staging.api.profilenest.com # Staging server
+
 
 tags:
   - name: Attendance

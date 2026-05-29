@@ -10,21 +10,30 @@ info:
     name: Apache 2.0
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   version: 1.0.0
+
 servers:
-  - url: '{protocol}://{environment}/services/user'
+  - url: '{protocol}://{environment}/{version}/{service}'
     variables:
       protocol:
         enum:
           - http
           - https
         default: http
+      version:
+        enum:
+          - v1
+        default: v1
+      service:
+        enum:
+          - user
+        default: user
       environment:
-        default: localhost:8081    # Local server
+        default: localhost:8081/api    # Local server
         enum:
           - localhost:8081
-          - api         # Production server
-          - api.dev     # Development server
-          - api.staging # Staging server
+          - api.profilenest.com         # Production server
+          - dev.api.profilenest.com     # Development server
+          - staging.api.profilenest.com # Staging server
 
 tags:
   - name: Register
@@ -43,28 +52,28 @@ security:
 paths:
   /internal/auth/authenticate:
     $ref: './paths/user/authenticate.yaml'
-  /api/admin/users/{login}:
+  /admin/users/{login}:
     $ref: './paths/user/managed-user.yaml'
 
-  /api/activate:
+  /activate:
     $ref: './paths/user/activate.yaml'
 
-  /api/authenticated:
+  /authenticated:
     $ref: './paths/user/is-authenticate.yaml'
 
-  /api/account:
+  /account:
     $ref: './paths/user/account.yaml'
 
-  /api/register:
+  /register:
     $ref: './paths/user/register.yaml'
 
-  /api/account/change-password:
+  /account/change-password:
     $ref: './paths/user/change-password.yaml'
 
-  /api/account/reset-password/init:
+  /account/reset-password/init:
     $ref: './paths/user/reset-password-init.yaml'
 
-  /api/account/reset-password/finish:
+  /account/reset-password/finish:
     $ref: './paths/user/reset-password-finished.yaml'
 
 components:
