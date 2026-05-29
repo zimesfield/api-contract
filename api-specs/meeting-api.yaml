@@ -20,8 +20,8 @@ servers:
         default: v1
       service:
         enum:
-          - meeting
-        default: meeting
+          - meetings
+        default: meetings
       environment:
         default: localhost:8081/api    # Local server
         enum:

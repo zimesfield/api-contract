@@ -23,8 +23,8 @@ servers:
         default: v1
       service:
         enum:
-          - attendance
-        default: attendance
+          - attendances
+        default: attendances
       environment:
         default: localhost:8081/api    # Local server
         enum:

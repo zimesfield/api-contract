@@ -23,8 +23,8 @@ servers:
         default: v1
       service:
         enum:
-          - financial
-        default: financial
+          - financials
+        default: financials
       environment:
         default: localhost:8081/api    # Local server
         enum:

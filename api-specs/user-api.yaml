@@ -25,8 +25,8 @@ servers:
         default: v1
       service:
         enum:
-          - user
-        default: user
+          - users
+        default: users
       environment:
         default: localhost:8081/api    # Local server
         enum:

@@ -20,8 +20,8 @@ servers:
         default: v1
       service:
         enum:
-          - announcement
-        default: announcement
+          - announcements
+        default: announcements
       environment:
         default: localhost:8081/api    # Local server
         enum:
