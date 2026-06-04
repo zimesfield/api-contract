@@ -1,11 +1,11 @@
 openapi: 3.0.1
 info:
-  title: YCP OLMPH User API Contract
-  description: 'This is the user contract for registration.  You can find out more about OLMPH
-    at [https://ycpolmphajah.com](https://ycpolmphajah.com).'
+  title: User API Contract
+  description: 'This API contract defines the endpoints and operations for user management, authentication,
+   and account operations in the Zimesfield platform.'
   termsOfService: 'https://swagger.io/terms/'
   contact:
-    email: comenuko@zimesfield.com
+    email: tech@zimesfield.com
   license:
     name: Apache 2.0
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'

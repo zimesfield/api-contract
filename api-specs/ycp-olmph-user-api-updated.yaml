@@ -1,108 +1,860 @@
-openapi: 3.0.1
+openapi: 3.1.0
+
 info:
-  title: YCP OLMPH User API Contract
+  title: Zimesfield Identity & Tenant API
+  version: 1.0.0
+
   description: |
-    This is the user contract for registration, authentication, and account management.
-    Learn more at [https://ycpolmphajah.com](https://ycpolmphajah.com).
-  termsOfService: https://swagger.io/terms/
+    Multi-tenant Identity and Access Management API for Zimesfield Platform.
+    
+    Key Design Principles:
+      - Users may belong to multiple tenants
+      - Tenant admins can only manage resources within their own tenant
+      - Tenant isolation is enforced at membership level
+      - Invitations are tenant-scoped
+      - Authentication is centralized
+      - Authorization is tenant-aware
+
   contact:
-    email: comenuko@zimesfield.com
+    name: Zimesfield Engineering
+    email: tech@zimesfield.com
+
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.0.0
 
 servers:
-  - url: '{protocol}://{environment}/services/user'
-    variables:
-      protocol:
-        enum: [http, https]
-        default: http
-      environment:
-        default: localhost:8081
-        enum:
-          - localhost:8081
-          - api
-          - api.dev
-          - api.staging
+  - url: https://api.zimesfield.com/api/v1
+    description: Production
+
+  - url: https://staging-api.zimesfield.com/api/v1
+    description: Staging
+
+  - url: http://localhost:8081/api/v1
+    description: Local Development
 
 tags:
-  - name: Auth
-    description: User authentication and login
-  - name: Account
-    description: Manage user account settings
-  - name: Admin
-    description: Admin operations on users
-  - name: Register
-    description: Registration endpoints
+  - name: Public Registration
+  - name: Authentication
+  - name: Current Account
+  - name: Tenant Memberships
+  - name: Tenant Invitations
+  - name: Tenant Administration
+
+security:
+  - bearerAuth: []
 
 paths:
-  /api/login:
+
+  ############################################################
+  # PUBLIC REGISTRATION
+  ############################################################
+
+  /public/tenants:
     post:
-      tags: [Auth]
-      summary: Authenticate user and return JWT
-      operationId: loginUser
+      tags:
+        - Public Registration
+
+      summary: Register a new tenant with initial tenant owner
+      operationId: registerTenant
+
+      security: []
+
       requestBody:
-        description: Login credentials
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantRegistrationRequest'
+
+      responses:
+        '201':
+          description: Tenant successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantRegistrationResponse'
+
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /public/tenants/{tenantSlug}/signup:
+    post:
+      tags:
+        - Public Registration
+
+      summary: Join an existing tenant through self-signup
+      operationId: signupToTenant
+
+      security: []
+
+      parameters:
+        - $ref: '#/components/parameters/TenantSlug'
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSignupRequest'
+
+      responses:
+        '201':
+          description: User successfully joined tenant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MembershipResponse'
+
+  ############################################################
+  # AUTHENTICATION
+  ############################################################
+
+  /public/auth/login:
+    post:
+      tags:
+        - Authentication
+
+      summary: Authenticate user
+      operationId: login
+
+      security: []
+
+      requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/LoginRequest'
-        required: true
+
       responses:
-        200:
-          description: JWT token response
+        '200':
+          description: Authentication successful
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/JwtToken'
-        401:
-          description: Invalid credentials
-          content:
-            application/problem+json:
-              schema:
-                $ref: './common/components/schemas.yaml#/components/schemas/Problem'
+                $ref: '#/components/schemas/TokenResponse'
 
-# Existing paths omitted here for brevity — they remain unchanged from your full spec above.
-# This example adds only the improved structure and the new login endpoint.
+  /public/auth/refresh:
+    post:
+      tags:
+        - Authentication
+
+      summary: Refresh access token
+      operationId: refreshToken
+
+      security: []
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+
+      responses:
+        '200':
+          description: Token refreshed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+
+  ############################################################
+  # CURRENT USER ACCOUNT
+  ############################################################
+
+  /account:
+    get:
+      tags:
+        - Current Account
+
+      summary: Get current authenticated account
+      operationId: getCurrentAccount
+
+      responses:
+        '200':
+          description: Current user account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+
+    patch:
+      tags:
+        - Current Account
+
+      summary: Update current authenticated account
+      operationId: updateCurrentAccount
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAccountRequest'
+
+      responses:
+        '200':
+          description: Account updated successfully
+
+  /account/change-password:
+    post:
+      tags:
+        - Current Account
+
+      summary: Change current account password
+      operationId: changePassword
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+
+      responses:
+        '204':
+          description: Password changed successfully
+
+  ############################################################
+  # CURRENT USER TENANTS
+  ############################################################
+
+  /account/tenants:
+    get:
+      tags:
+        - Tenant Memberships
+
+      summary: List tenants accessible to current user
+      operationId: getCurrentUserTenants
+
+      responses:
+        '200':
+          description: Accessible tenants
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantListResponse'
+
+  ############################################################
+  # TENANT MEMBERSHIPS
+  ############################################################
+
+  /tenants/{tenantId}/memberships:
+    get:
+      tags:
+        - Tenant Administration
+
+      summary: List memberships within tenant
+      description: |
+        Tenant admins can only view memberships belonging to their own tenant.
+
+      operationId: listTenantMemberships
+
+      parameters:
+        - $ref: '#/components/parameters/TenantId'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+
+      responses:
+        '200':
+          description: Tenant memberships
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MembershipPageResponse'
+
+    post:
+      tags:
+        - Tenant Administration
+
+      summary: Add existing user to tenant
+      operationId: addUserToTenant
+
+      parameters:
+        - $ref: '#/components/parameters/TenantId'
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddMembershipRequest'
+
+      responses:
+        '201':
+          description: Membership created
+
+  /tenants/{tenantId}/memberships/{membershipId}:
+    get:
+      tags:
+        - Tenant Administration
+
+      summary: Get membership details
+      operationId: getMembership
+
+      parameters:
+        - $ref: '#/components/parameters/TenantId'
+        - $ref: '#/components/parameters/MembershipId'
+
+      responses:
+        '200':
+          description: Membership retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MembershipResponse'
+
+    patch:
+      tags:
+        - Tenant Administration
+
+      summary: Update tenant membership role
+      operationId: updateMembershipRole
+
+      parameters:
+        - $ref: '#/components/parameters/TenantId'
+        - $ref: '#/components/parameters/MembershipId'
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMembershipRoleRequest'
+
+      responses:
+        '200':
+          description: Membership updated
+
+    delete:
+      tags:
+        - Tenant Administration
+
+      summary: Remove membership from tenant
+      operationId: removeMembership
+
+      parameters:
+        - $ref: '#/components/parameters/TenantId'
+        - $ref: '#/components/parameters/MembershipId'
+
+      responses:
+        '204':
+          description: Membership removed
+
+  ############################################################
+  # INVITATIONS
+  ############################################################
+
+  /tenants/{tenantId}/invitations:
+    post:
+      tags:
+        - Tenant Invitations
+
+      summary: Invite user to tenant
+      operationId: inviteUserToTenant
+
+      parameters:
+        - $ref: '#/components/parameters/TenantId'
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateInvitationRequest'
+
+      responses:
+        '201':
+          description: Invitation created
+
+    get:
+      tags:
+        - Tenant Invitations
+
+      summary: List invitations for tenant
+      operationId: listTenantInvitations
+
+      parameters:
+        - $ref: '#/components/parameters/TenantId'
+
+      responses:
+        '200':
+          description: Invitations retrieved
+
+  /public/invitations/accept:
+    post:
+      tags:
+        - Tenant Invitations
+
+      summary: Accept tenant invitation
+      operationId: acceptInvitation
+
+      security: []
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptInvitationRequest'
+
+      responses:
+        '201':
+          description: Invitation accepted successfully
 
 components:
+
+  ############################################################
+  # SECURITY
+  ############################################################
+
+  securitySchemes:
+
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+    openId:
+      type: openIdConnect
+      openIdConnectUrl: >
+        https://identity.zimesfield.com/realms/zimesfield/.well-known/openid-configuration
+
+  ############################################################
+  # PARAMETERS
+  ############################################################
+
+  parameters:
+
+    TenantId:
+      name: tenantId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+    TenantSlug:
+      name: tenantSlug
+      in: path
+      required: true
+      schema:
+        type: string
+
+    MembershipId:
+      name: membershipId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+
+    Size:
+      name: size
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+
+  ############################################################
+  # RESPONSES
+  ############################################################
+
+  responses:
+
+    BadRequest:
+      description: Invalid request
+
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+
+    Unauthorized:
+      description: Unauthorized request
+
+    Forbidden:
+      description: Access denied
+
+    NotFound:
+      description: Resource not found
+
+    Conflict:
+      description: Resource conflict
+
+  ############################################################
+  # SCHEMAS
+  ############################################################
+
   schemas:
+
+    ##########################################################
+    # PROBLEM DETAILS
+    ##########################################################
+
+    Problem:
+      type: object
+
+      properties:
+        type:
+          type: string
+
+        title:
+          type: string
+
+        status:
+          type: integer
+
+        detail:
+          type: string
+
+        instance:
+          type: string
+
+    ##########################################################
+    # TENANT
+    ##########################################################
+
+    TenantSummary:
+      type: object
+
+      properties:
+        id:
+          type: string
+          format: uuid
+
+        slug:
+          type: string
+
+        name:
+          type: string
+
+        membershipRole:
+          $ref: '#/components/schemas/TenantRole'
+
+    TenantListResponse:
+      type: object
+
+      properties:
+        items:
+          type: array
+
+          items:
+            $ref: '#/components/schemas/TenantSummary'
+
+    ##########################################################
+    # USER
+    ##########################################################
+
+    UserSummary:
+      type: object
+
+      properties:
+        id:
+          type: string
+          format: uuid
+
+        email:
+          type: string
+          format: email
+
+        firstName:
+          type: string
+
+        lastName:
+          type: string
+
+    UserProfileResponse:
+      allOf:
+        - $ref: '#/components/schemas/UserSummary'
+
+        - type: object
+
+          properties:
+            tenants:
+              type: array
+
+              items:
+                $ref: '#/components/schemas/TenantSummary'
+
+    ##########################################################
+    # MEMBERSHIP
+    ##########################################################
+
+    MembershipResponse:
+      type: object
+
+      properties:
+        id:
+          type: string
+          format: uuid
+
+        tenant:
+          $ref: '#/components/schemas/TenantSummary'
+
+        user:
+          $ref: '#/components/schemas/UserSummary'
+
+        role:
+          $ref: '#/components/schemas/TenantRole'
+
+        status:
+          $ref: '#/components/schemas/MembershipStatus'
+
+    MembershipPageResponse:
+      type: object
+
+      properties:
+        content:
+          type: array
+
+          items:
+            $ref: '#/components/schemas/MembershipResponse'
+
+        totalElements:
+          type: integer
+
+        totalPages:
+          type: integer
+
+        page:
+          type: integer
+
+        size:
+          type: integer
+
+    ##########################################################
+    # AUTH
+    ##########################################################
+
     LoginRequest:
       type: object
-      required: [username, password]
+
+      required:
+        - username
+        - password
+
       properties:
         username:
           type: string
-          example: admin
+
         password:
           type: string
-          example: admin
-        rememberMe:
-          type: boolean
-          default: false
-    JwtToken:
+          format: password
+
+    RefreshTokenRequest:
       type: object
+
+      required:
+        - refreshToken
+
       properties:
-        id_token:
+        refreshToken:
           type: string
 
-  securitySchemes:
-    oauth:
-      type: oauth2
-      description: OAuth2 with Keycloak
-      flows:
-        authorizationCode:
-          authorizationUrl: http://localhost:9080/realms/zimesfield/protocol/openid-connect/auth
-          tokenUrl: http://localhost:9080/realms/zimesfield/protocol/openid-connect/token
-          scopes:
-            openid: Zimesfeld specific claims
-            email: Email claims
-            profile: Profile claims
-    openId:
-      type: openIdConnect
-      openIdConnectUrl: http://localhost:9080/realms/jhipster/.well-known/openid-configuration
+    TokenResponse:
+      type: object
 
-security:
-  - oauth: [openid, email, profile]
-  - openId: [openid, email, profile]
+      properties:
+        accessToken:
+          type: string
+
+        refreshToken:
+          type: string
+
+        expiresIn:
+          type: integer
+
+        tokenType:
+          type: string
+          example: Bearer
+
+    ##########################################################
+    # REGISTRATION
+    ##########################################################
+
+    TenantRegistrationRequest:
+      type: object
+
+      required:
+        - tenantName
+        - tenantSlug
+        - owner
+
+      properties:
+        tenantName:
+          type: string
+
+        tenantSlug:
+          type: string
+
+        owner:
+          $ref: '#/components/schemas/UserRegistrationRequest'
+
+    TenantRegistrationResponse:
+      type: object
+
+      properties:
+        tenantId:
+          type: string
+          format: uuid
+
+        ownerId:
+          type: string
+          format: uuid
+
+    UserRegistrationRequest:
+      type: object
+
+      required:
+        - email
+        - password
+        - firstName
+        - lastName
+
+      properties:
+        email:
+          type: string
+          format: email
+
+        password:
+          type: string
+          format: password
+
+        firstName:
+          type: string
+
+        lastName:
+          type: string
+
+    UserSignupRequest:
+      allOf:
+        - $ref: '#/components/schemas/UserRegistrationRequest'
+
+    ##########################################################
+    # ACCOUNT
+    ##########################################################
+
+    UpdateAccountRequest:
+      type: object
+
+      properties:
+        firstName:
+          type: string
+
+        lastName:
+          type: string
+
+    ChangePasswordRequest:
+      type: object
+
+      required:
+        - currentPassword
+        - newPassword
+
+      properties:
+        currentPassword:
+          type: string
+          format: password
+
+        newPassword:
+          type: string
+          format: password
+
+    ##########################################################
+    # INVITATIONS
+    ##########################################################
+
+    CreateInvitationRequest:
+      type: object
+
+      required:
+        - email
+        - role
+
+      properties:
+        email:
+          type: string
+          format: email
+
+        role:
+          $ref: '#/components/schemas/TenantRole'
+
+    AcceptInvitationRequest:
+      type: object
+
+      required:
+        - token
+        - password
+
+      properties:
+        token:
+          type: string
+
+        password:
+          type: string
+          format: password
+
+    ##########################################################
+    # MEMBERSHIP MANAGEMENT
+    ##########################################################
+
+    AddMembershipRequest:
+      type: object
+
+      required:
+        - userId
+        - role
+
+      properties:
+        userId:
+          type: string
+          format: uuid
+
+        role:
+          $ref: '#/components/schemas/TenantRole'
+
+    UpdateMembershipRoleRequest:
+      type: object
+
+      required:
+        - role
+
+      properties:
+        role:
+          $ref: '#/components/schemas/TenantRole'
+
+    ##########################################################
+    # ENUMS
+    ##########################################################
+
+    TenantRole:
+      type: string
+
+      enum:
+        - TENANT_OWNER
+        - TENANT_ADMIN
+        - TENANT_MANAGER
+        - TENANT_USER
+        - TENANT_VIEWER
+
+    MembershipStatus:
+      type: string
+
+      enum:
+        - PENDING
+        - ACTIVE
+        - SUSPENDED
+        - REMOVED
