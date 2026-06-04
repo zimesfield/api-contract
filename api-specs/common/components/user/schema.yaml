@@ -206,24 +206,14 @@ SignupRequest:
   type: object
   required:
     - tenantName
-    - firstName
-    - lastName
     - email
   properties:
     tenantName:
       type: string
       example: Zimesfield Limited
-    firstName:
-      type: string
-      example: John
-    lastName:
-      type: string
-      example: Doe
     email:
       type: string
       example: test@test
-    phone:
-      type: string
 
 SignupResponse:
   type: object
@@ -234,12 +224,6 @@ SignupResponse:
     tenantName:
       type: string
       example: Zimesfield Limited
-    firstName:
-      type: string
-      example: Zimes
-    lastName:
-      type: string
-      example: Field
     email:
       type: string
       example: test@test
