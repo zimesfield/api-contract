@@ -227,4 +227,7 @@ SignupResponse:
     email:
       type: string
       example: test@test
+    status:
+      type: string
+      example: PENDING
 
