@@ -201,3 +201,46 @@ KeyAndPasswordRequest:
       type: string
       example: 123@test
 
+
+SignupRequest:
+  type: object
+  required:
+    - tenantName
+    - firstName
+    - lastName
+    - email
+  properties:
+    tenantName:
+      type: string
+      example: Zimesfield Limited
+    firstName:
+      type: string
+      example: John
+    lastName:
+      type: string
+      example: Doe
+    email:
+      type: string
+      example: test@test
+    phone:
+      type: string
+
+SignupResponse:
+  type: object
+  properties:
+    tenantId:
+      type: string
+      example: "2b5901be-9f28-4fa4-b565-706cbbc699c5"
+    tenantName:
+      type: string
+      example: Zimesfield Limited
+    firstName:
+      type: string
+      example: Zimes
+    lastName:
+      type: string
+      example: Field
+    email:
+      type: string
+      example: test@test
+

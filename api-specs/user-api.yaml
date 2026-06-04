@@ -64,6 +64,9 @@ paths:
   /account:
     $ref: './paths/user/account.yaml'
 
+  /signup:
+    $ref: './paths/user/signup.yaml'
+
   /register:
     $ref: './paths/user/register.yaml'
 
