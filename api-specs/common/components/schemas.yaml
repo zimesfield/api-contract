@@ -158,21 +158,18 @@ components:
 
     MonthEnum:
       type: string
-      enum:
-        - enum: [January,February,March,April,May,June,July,August,September,October,November,December]
+      enum: [January,February,March,April,May,June,July,August,September,October,November,December]
       default: January
 
     GenderEnum:
       type: string
-      enum:
-        - enum: [Female, Male]
-      default: Male
+      enum: [Female, Male]
+      example: Male
 
     MaritalStatusEnum:
       type: string
-      enum:
-        - enum: [Single, Married, Divorced, Windowed]
-      default: Single
+      enum: [Single, Married, Divorced, Windowed]
+      example: Single
 
     UserStatusEnum:
       type: string
