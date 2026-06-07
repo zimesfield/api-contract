@@ -92,14 +92,23 @@ components:
         rememberMe:
           type: boolean
           default: false
+          
     AuthValidationResponse:
       type: object
       properties:
         tenantId:
           type: string
+        login:
+          type: string
         email:
           type: string
-        roles:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        enabled:
+          type: boolean
+        authorities:
           type: array
     JwtToken:
       type: object
