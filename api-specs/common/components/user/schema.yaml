@@ -125,7 +125,6 @@ UserRegistrationRequest:
     - email
     - password
     - phone
-    - address
     - dayOfBirth
     - monthOfBirth
   properties:
@@ -145,17 +144,17 @@ UserRegistrationRequest:
       type: string
       example: 07012345678
     address:
-        type: object
-        $ref: '../schemas.yaml#/components/schemas/Address'
+      type: object
+      $ref: '../schemas.yaml#/components/schemas/Address'
     dayOfBirth:
       type: string
       example: 5
     maritalStatus:
-        $ref: '../schemas.yaml#/components/schemas/MaritalStatusEnum'
+      $ref: '../schemas.yaml#/components/schemas/MaritalStatusEnum'
     gender:
-        $ref: '../schemas.yaml#/components/schemas/GenderEnum'
+      $ref: '../schemas.yaml#/components/schemas/GenderEnum'
     monthOfBirth:
-        $ref: "../schemas.yaml#/components/schemas/MonthEnum"
+      $ref: "../schemas.yaml#/components/schemas/MonthEnum"
 
 UserRegistrationResponse:
   type: object
