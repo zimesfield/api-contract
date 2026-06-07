@@ -134,11 +134,6 @@ components:
             Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
     Address:
       type: object
-      required:
-        - street
-        - area
-        - state
-        - country
       properties:
         houseNumber:
           type: string
