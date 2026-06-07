@@ -137,19 +137,19 @@ components:
       properties:
         houseNumber:
           type: string
-          example: '123'
+          example: 123
         street:
           type: string
-          example: 'My street is here'
+          example: My street is here
         area:
           type: string
           example: 'eti-osa'
         state:
           type: string
-          example: 'Lagos'
+          example: Lagos
         country:
           type: string
-          example: 'Nigeria'
+          example: Nigeria
 
     MonthEnum:
       type: string
