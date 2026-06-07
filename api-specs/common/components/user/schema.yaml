@@ -119,18 +119,11 @@ AdminRegistrationRequest:
 UserRegistrationRequest:
   type: object
   required:
-    - login
     - firstName
     - lastName
     - email
-    - password
     - phone
-    - dayOfBirth
-    - monthOfBirth
   properties:
-    login:
-      type: string
-      example: zimesfield
     firstName:
       type: string
       example: Zimes
@@ -143,17 +136,17 @@ UserRegistrationRequest:
     phone:
       type: string
       example: 07012345678
-    address:
-      $ref: '../schemas.yaml#/components/schemas/Address'
-    dayOfBirth:
-      type: string
-      example: 5
-    maritalStatus:
-      $ref: '../schemas.yaml#/components/schemas/MaritalStatusEnum'
-    gender:
-      $ref: '../schemas.yaml#/components/schemas/GenderEnum'
-    monthOfBirth:
-      $ref: "../schemas.yaml#/components/schemas/MonthEnum"
+#    address:
+#      $ref: '../schemas.yaml#/components/schemas/Address'
+#    dayOfBirth:
+#      type: string
+#      example: 5
+#    maritalStatus:
+#      $ref: '../schemas.yaml#/components/schemas/MaritalStatusEnum'
+#    gender:
+#      $ref: '../schemas.yaml#/components/schemas/GenderEnum'
+#    monthOfBirth:
+#      $ref: "../schemas.yaml#/components/schemas/MonthEnum"
 
 UserRegistrationResponse:
   type: object
