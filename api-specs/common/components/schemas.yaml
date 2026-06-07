@@ -92,7 +92,7 @@ components:
         rememberMe:
           type: boolean
           default: false
-          
+
     AuthValidationResponse:
       type: object
       properties:
@@ -160,19 +160,19 @@ components:
       type: string
       enum:
         - enum: [January,February,March,April,May,June,July,August,September,October,November,December]
-      example: January
+      default: January
 
     GenderEnum:
       type: string
       enum:
         - enum: [Female, Male]
-      example: Male
+      default: Male
 
     MaritalStatusEnum:
       type: string
       enum:
         - enum: [Single, Married, Divorced, Windowed]
-      example: Single
+      default: Single
 
     UserStatusEnum:
       type: string
