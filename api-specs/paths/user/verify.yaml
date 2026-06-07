@@ -1,0 +1,33 @@
+get:
+  tags: [ Authenticate ]
+  summary: Get user information for authentication
+  operationId: userInfor
+  parameters:
+    - name: email
+      in: query
+      description: 'The login email'
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: Login successful
+      content:
+        application/json:
+          schema:
+            $ref: '../../common/components/user/schema.yaml#/UserInfo'
+    400:
+      description: Invalid credentials
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+    401:
+      description: Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+
+  security:
+    - oauth2: [ ]

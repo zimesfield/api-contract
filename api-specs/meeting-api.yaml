@@ -7,7 +7,7 @@ info:
     name: Zimesfield Team
 
 servers:
-  - url: '{protocol}://{environment}/{version}/{service}'
+  - url: '{protocol}://{environment}/{version}/api/{service}'
     variables:
       protocol:
         enum:
@@ -23,7 +23,7 @@ servers:
           - meetings
         default: meetings
       environment:
-        default: localhost:8081/api    # Local server
+        default: localhost:8081    # Local server
         enum:
           - localhost:8081
           - api.profilenest.com         # Production server

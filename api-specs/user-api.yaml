@@ -12,7 +12,7 @@ info:
   version: 1.0.0
 
 servers:
-  - url: '{protocol}://{environment}/{version}/{service}'
+  - url: '{protocol}://{environment}/{version}/api/{service}'
     variables:
       protocol:
         enum:
@@ -28,7 +28,7 @@ servers:
           - users
         default: users
       environment:
-        default: localhost:8081/api    # Local server
+        default: localhost:8081    # Local server
         enum:
           - localhost:8081
           - api.profilenest.com         # Production server
@@ -50,7 +50,7 @@ security:
   - openId: [ user, email, profile ]
 
 paths:
-  /internal/auth/authenticate:
+  /authenticate:
     $ref: './paths/user/authenticate.yaml'
   /admin/users/{login}:
     $ref: './paths/user/managed-user.yaml'
@@ -60,6 +60,9 @@ paths:
 
   /authenticated:
     $ref: './paths/user/is-authenticate.yaml'
+
+  /auth:
+    $ref: './paths/user/authenticate-info.yaml'
 
   /account:
     $ref: './paths/user/account.yaml'

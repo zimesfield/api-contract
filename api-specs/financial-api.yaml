@@ -10,7 +10,7 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
 
 servers:
-  - url: '{protocol}://{environment}/{version}/{service}'
+  - url: '{protocol}://{environment}/{version}/api/{service}'
     variables:
       protocol:
         enum:
@@ -26,7 +26,7 @@ servers:
           - financials
         default: financials
       environment:
-        default: localhost:8081/api    # Local server
+        default: localhost:8081    # Local server
         enum:
           - localhost:8081
           - api.profilenest.com         # Production server
