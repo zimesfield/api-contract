@@ -144,7 +144,6 @@ UserRegistrationRequest:
       type: string
       example: 07012345678
     address:
-      type: object
       $ref: '../schemas.yaml#/components/schemas/Address'
     dayOfBirth:
       type: string
