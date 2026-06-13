@@ -16,18 +16,18 @@ post:
         application/json:
           schema:
             $ref: '../../common/components/user/schema.yaml#/SignupResponse'
-    400:
-      description: Invalid information supplied
-      content:
-        application/problem+json:
-          schema:
-            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
-    404:
-      description: Resources Not Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+    '400':
+      $ref: '../../common/components/responses.yaml#/BadRequest'
+    '401':
+      $ref: '../../common/components/responses.yaml#/Unauthorized'
+    '403':
+      $ref: '../../common/components/responses.yaml#/Forbidden'
+    '404':
+      $ref: '../../common/components/responses.yaml#/NotFound'
+    '409':
+      $ref: '../../common/components/responses.yaml#/Conflict'
+    '422':
+      $ref: '../../common/components/responses.yaml#/UnprocessableEntity'
 
   security:
     - oauth2: []

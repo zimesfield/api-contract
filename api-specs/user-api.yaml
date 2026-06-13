@@ -50,6 +50,9 @@ security:
   - openId: [ user, email, profile ]
 
 paths:
+  /register:
+    $ref: './paths/user/register.yaml'
+
   /authenticate:
     $ref: './paths/user/authenticate.yaml'
   /admin/users/{login}:
@@ -66,12 +69,6 @@ paths:
 
   /account:
     $ref: './paths/user/account.yaml'
-
-  /signup:
-    $ref: './paths/user/signup.yaml'
-
-  /register:
-    $ref: './paths/user/register.yaml'
 
   /account/change-password:
     $ref: './paths/user/change-password.yaml'
