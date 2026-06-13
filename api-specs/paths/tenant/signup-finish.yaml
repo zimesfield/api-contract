@@ -1,23 +1,22 @@
 post:
   tags: [Register]
-  summary: Managed User Registration
-  operationId: registerUser
-  parameters:
-    - $ref: '../../common/components/schemas.yaml#/components/parameters/TenantHeader'
+  summary: Complete Tenant Sign up
+  description: Complete tenant sign up with user information
+  operationId: finishSignup
   requestBody:
-    description: register user to tenant
+    description: finish user sign up for tenant
     content:
       application/json:
         schema:
-          $ref: '../../common/components/user/schema.yaml#/UserRegistrationRequest'
+          $ref: '../../common/components/user/schema.yaml#/FinishSignupRequest'
     required: true
   responses:
-    200:
-      description: successful operation
+    '201':
+      description: Tenant signup completed successfully
       content:
         application/json:
           schema:
-            $ref: '../../common/components/user/schema.yaml#/UserRegistrationResponse'
+            $ref: '../../common/components/user/schema.yaml#/UserResponse'
     '400':
       $ref: '../../common/components/responses.yaml#/BadRequest'
     '401':
@@ -30,6 +29,5 @@ post:
       $ref: '../../common/components/responses.yaml#/Conflict'
     '422':
       $ref: '../../common/components/responses.yaml#/UnprocessableEntity'
-
   security:
     - oauth2: []

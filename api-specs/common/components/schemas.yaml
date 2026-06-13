@@ -39,6 +39,33 @@ components:
             type: integer
             example: 0
   schemas:
+    FieldError:
+      type: object
+      properties:
+
+        field:
+          type: string
+          description: Request field that caused the validation error
+          example: email
+
+        message:
+          type: string
+          description: Human-readable validation message
+          example: Email address is invalid
+
+        code:
+          type: string
+          description: Machine-readable validation code
+          example: INVALID_EMAIL
+
+        rejectedValue:
+          nullable: true
+          description: Value rejected during validation
+          example: invalid-email
+
+      required:
+        - field
+        - message
     Problem:
       type: object
       properties:
@@ -79,6 +106,17 @@ components:
           description: |
             An absolute URI that identifies the specific occurrence of the problem.
             It may or may not yield further information if dereferenced.
+        timestamp:
+          type: string
+          format: date-time
+        path:
+          type: string
+        errorCode:
+          type: string
+        fieldErrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldError'
     LoginRequest:
       type: object
       required: [ email, password ]
@@ -173,4 +211,3 @@ components:
         - inactive
         - suspended
       default: active
-

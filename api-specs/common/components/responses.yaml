@@ -1,0 +1,49 @@
+BadRequest:
+  description: Invalid request payload
+  content:
+    application/problem+json:
+      schema:
+        $ref: './schemas.yaml#/components/schemas/Problem'
+
+Unauthorized:
+  description: Authentication required
+  content:
+    application/problem+json:
+      schema:
+        $ref: './schemas.yaml#/components/schemas/Problem'
+
+Forbidden:
+  description: Access denied
+  content:
+    application/problem+json:
+      schema:
+        $ref: './schemas.yaml#/components/schemas/Problem'
+
+NotFound:
+  description: Resource not found
+  content:
+    application/problem+json:
+      schema:
+        $ref: './schemas.yaml#/components/schemas/Problem'
+
+Conflict:
+  description: Resource conflict
+  content:
+    application/problem+json:
+      schema:
+        $ref: './schemas.yaml#/components/schemas/Problem'
+
+UnprocessableEntity:
+  description: Business validation failed
+  content:
+    application/problem+json:
+      schema:
+        $ref: './schemas.yaml#/components/schemas/Problem'
+
+InternalServerError:
+  description: Unexpected server error
+  content:
+    application/problem+json:
+      schema:
+        $ref: './schemas.yaml#/components/schemas/Problem'
+

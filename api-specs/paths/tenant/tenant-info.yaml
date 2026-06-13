@@ -1,7 +1,9 @@
 get:
   summary: Retrieves tenant information
-  tags:
-    - Tenant
+  description: |
+    Retrieves tenant information based on the provided tenantId.
+    This endpoint is useful for validating the existence and details of a tenant in the system.
+  tags: [Tenant]
   operationId: getTenantInformation
   parameters:
     - $ref: '../../common/components/schemas.yaml#/components/parameters/TenantHeader'
@@ -12,24 +14,24 @@ get:
         type: string
   responses:
     200:
-      description: Company information is valid
+      description: Successfully retrieved Tenant information
       content:
         application/json:
           schema:
             $ref: '../../common/components/tenant/schema.yaml#/Tenant'
-    400:
-      description: Bad Request
-      content:
-        application/problem+json:
-          schema:
-            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+    '400':
+      $ref: '../../common/components/responses.yaml#/BadRequest'
+    '401':
+      $ref: '../../common/components/responses.yaml#/Unauthorized'
+    '403':
+      $ref: '../../common/components/responses.yaml#/Forbidden'
+    '404':
+      $ref: '../../common/components/responses.yaml#/NotFound'
+    '409':
+      $ref: '../../common/components/responses.yaml#/Conflict'
+    '422':
+      $ref: '../../common/components/responses.yaml#/UnprocessableEntity'
 
-    404:
-      description: No Tenant Found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
   security:
     - oauth2: [admins]
 put:

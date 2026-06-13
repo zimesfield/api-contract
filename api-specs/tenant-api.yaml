@@ -5,79 +5,47 @@ info:
   description: API for registering tenants, validating input, verifying token, and sending notifications in a multi-tenant system.
 
 servers:
-  - url: '{protocol}://{environment}/api'
-    description: Production server
+  - url: '{protocol}://{environment}/{version}/api/{service}'
     variables:
       protocol:
         enum:
           - http
           - https
         default: http
-      environment:
-        default: localhost:8082    # Local server
+      version:
         enum:
-          - localhost:8082
-          - tenant.zimesfield.com
+          - v1
+        default: v1
+      service:
+        enum:
+          - tenants
+        default: tenants
+      environment:
+        default: localhost:8081    # Local server
+        enum:
+          - localhost:8081
+          - api.profilenest.com         # Production server
+          - dev.api.profilenest.com     # Development server
+          - staging.api.profilenest.com # Staging server
+
 tags:
+  - name: Register
+    description: Tenant registration
   - name: Tenant
     description: Tenant management
-  - name: User
-    description: User management
-  - name: Authenticate
-    description: Authentication Management
-  - name: Account
-    description: Account Management
-  - name: Admin
-    description: Operations about user
 
 security:
-  - oauth: [ admins,super_admins,finance,secretaries,users ]
+  - oauth: [ ]
 
 paths:
-  /tenants/register:
-    $ref: './paths/tenant/register.yaml'
+  /init/signup:
+    $ref: './paths/tenant/signup-init.yaml'
+
+  /finish/signup:
+    $ref: './paths/tenant/signup-finish.yaml'
 
   /tenants/{uuid}:
-    $ref: './paths/tenant/tenant.yaml'
+    $ref: './paths/tenant/tenant-info.yaml'
 
   /tenants/{uuid}/email:
     $ref: './paths/tenant/update-email.yaml'
-
-  /tenants/verify:
-    $ref: './paths/tenant/verify-token.yaml'
-
-  /admin/users/{login}:
-    $ref: './paths/user/managed-user.yaml'
-
-
-  /activate:
-    $ref: './paths/user/activate.yaml'
-
-  /auth:
-    $ref: './paths/user/authenticate-info.yaml'
-
-  /auth/validate:
-    $ref: './paths/user/authenticate.yaml'
-
-#  /auth/authenticated:
-#    $ref: './paths/user/is-authenticate.yaml'
-
-  /account:
-    $ref: './paths/user/account.yaml'
-
-  /register:
-    $ref: './paths/user/register.yaml'
-
-  /account/change-password:
-    $ref: './paths/user/change-password.yaml'
-
-  /account/reset-password/init:
-    $ref: './paths/user/reset-password-init.yaml'
-
-  /account/reset-password/finish:
-    $ref: './paths/user/reset-password-finished.yaml'
-
-components:
-  securitySchemes:
-    oauth:
-      $ref: './paths/security.yaml#/zimesfield/oauth'
