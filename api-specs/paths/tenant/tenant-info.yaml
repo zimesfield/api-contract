@@ -58,11 +58,10 @@ put:
         application/json:
           schema:
             $ref: '../../common/components/tenant/schema.yaml#/Tenant'
-    400:
-      description: Invalid Information Supplied
-      content:
-        application/problem+json:
-          schema:
-            $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
+    '400':
+      $ref: '../../common/components/responses.yaml#/BadRequest'
+    '401':
+      $ref: '../../common/components/responses.yaml#/Unauthorized'
+
   security:
     - oauth2: [ admins ]

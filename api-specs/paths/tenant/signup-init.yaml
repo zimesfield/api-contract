@@ -1,5 +1,5 @@
 post:
-  tags: [Register]
+  tags: [Signup]
   summary: Tenant Registration
   operationId: signupUser
   requestBody:

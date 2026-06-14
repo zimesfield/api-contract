@@ -1,5 +1,5 @@
 post:
-  tags: [Register]
+  tags: [Signup]
   summary: Complete Tenant Sign up
   description: Complete tenant sign up with user information
   operationId: finishSignup
