@@ -47,5 +47,7 @@ paths:
   /tenants:
     $ref: './paths/tenant/tenant-info.yaml'
 
-  /tenants/{uuid}/email:
+  /tenants/email:
     $ref: './paths/tenant/update-email.yaml'
+  /tenants/name:
+    $ref: './paths/tenant/update-name.yaml'

@@ -20,6 +20,23 @@ UpdateTenantRequest:
     address:
       $ref: '../schemas.yaml#/components/schemas/Address'
 
+UpdateTenantNameRequest:
+  type: object
+  required: [name]
+  properties:
+    name:
+      type: string
+      example: "Zimesfield Limited"
+
+UpdateTenantEmailRequest:
+  type: object
+  required: [email]
+  properties:
+    email:
+      type: string
+      format: email
+      example: "test@zimesfield.com"
+
 TenantResponse:
   type: object
   properties:

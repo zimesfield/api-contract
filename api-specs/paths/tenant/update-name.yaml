@@ -1,8 +1,8 @@
 
 put:
-  summary: Update tenant email
+  summary: Update tenant name
   tags: [Tenant]
-  operationId: updateEmail
+  operationId: updateName
   parameters:
     - $ref: '../../common/components/schemas.yaml#/components/parameters/TenantHeader'
   requestBody:
@@ -10,7 +10,7 @@ put:
     content:
       application/json:
         schema:
-          $ref: '../../common/components/tenant/schema.yaml#/UpdateTenantEmailRequest'
+          $ref: '../../common/components/tenant/schema.yaml#/UpdateTenantNameRequest'
   responses:
     '202':
       description: Successfully updated Tenant information
@@ -18,6 +18,8 @@ put:
         application/json:
           schema:
             $ref: '../../common/components/tenant/schema.yaml#/Tenant'
+    '422':
+      $ref: '../../common/components/schemas.yaml#/components/schemas/Problem'
     '400':
       $ref: '../../common/components/responses.yaml#/BadRequest'
     '401':
