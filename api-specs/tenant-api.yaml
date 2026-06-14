@@ -38,10 +38,10 @@ security:
   - oauth: [ ]
 
 paths:
-  /init/signup:
+  /signup:
     $ref: './paths/tenant/signup-init.yaml'
 
-  /finish/signup:
+  /signup/finish:
     $ref: './paths/tenant/signup-finish.yaml'
 
   /tenants/{uuid}:
