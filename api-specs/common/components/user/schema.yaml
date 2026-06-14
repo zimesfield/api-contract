@@ -226,13 +226,9 @@ SignupResponse:
 FinishSignupRequest:
   type: object
   required:
-    - tenantId
     - firstName
     - lastName
   properties:
-    tenantId:
-      type: string
-      example: "2b5901be-9f28-4fa4-b565-706cbbc699c5"
     firstName:
       type: string
       example: Zimes

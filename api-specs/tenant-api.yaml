@@ -41,7 +41,7 @@ paths:
   /signup:
     $ref: './paths/tenant/signup-init.yaml'
 
-  /signup/finish:
+  /signup/{uuid}/finish:
     $ref: './paths/tenant/signup-finish.yaml'
 
   /tenants/{uuid}:
