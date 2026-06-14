@@ -7,11 +7,6 @@ get:
   operationId: getTenantInformation
   parameters:
     - $ref: '../../common/components/schemas.yaml#/components/parameters/TenantHeader'
-    - name: tenantId
-      required: true
-      in: query
-      schema:
-        type: string
   responses:
     200:
       description: Successfully retrieved Tenant information

@@ -29,7 +29,7 @@ servers:
           - staging.api.profilenest.com # Staging server
 
 tags:
-  - name: Register
+  - name: Signup
     description: Tenant registration
   - name: Tenant
     description: Tenant management
@@ -41,10 +41,10 @@ paths:
   /signup:
     $ref: './paths/tenant/signup-init.yaml'
 
-  /signup/{uuid}/finish:
+  /signup/finish:
     $ref: './paths/tenant/signup-finish.yaml'
 
-  /tenants/{uuid}:
+  /tenants:
     $ref: './paths/tenant/tenant-info.yaml'
 
   /tenants/{uuid}/email:

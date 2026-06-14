@@ -5,11 +5,6 @@ put:
   operationId: updateEmail
   parameters:
     - $ref: '../../common/components/schemas.yaml#/components/parameters/TenantHeader'
-    - name: uuid
-      required: true
-      in: path
-      schema:
-        type: string
   requestBody:
     required: true
     content:

@@ -3,6 +3,8 @@ post:
   summary: Complete Tenant Sign up
   description: Complete tenant sign up with user information
   operationId: finishSignup
+  parameters:
+    - $ref: '../../common/components/schemas.yaml#/components/parameters/TenantHeader'
   requestBody:
     description: finish user sign up for tenant
     content:
