@@ -13,6 +13,13 @@ components:
       schema:
         type: string
       description: Tenant identifier
+    CorrelationId:
+      name: X-Correlation-Id
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Correlation Id
   responses:
     Problem:
       description: error occurred - see status code and problem object for more information.
