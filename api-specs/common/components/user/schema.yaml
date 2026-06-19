@@ -228,6 +228,7 @@ FinishSignupRequest:
   required:
     - firstName
     - lastName
+    - password
   properties:
     firstName:
       type: string
@@ -235,3 +236,6 @@ FinishSignupRequest:
     lastName:
       type: string
       example: Field
+    password:
+      type: string
+      example: test1234
